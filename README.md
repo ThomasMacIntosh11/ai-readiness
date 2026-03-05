@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Readiness Self-Assessment
 
-## Getting Started
+A Next.js app for running a 7-enabler AI readiness assessment with:
+- Guided assessment flow
+- User information capture
+- Scoring by category and overall maturity
+- Dynamic recommendations
+- Color PDF report export
 
-First, run the development server:
+## App Flow
+
+1. `/` Start page
+2. `/assessment` Questionnaire (7 categories, 2 questions each, 1-5 scale)
+3. `/user-info` User details form
+4. `/results` Scored results, maturity stage, recommendations, PDF export
+5. `/contact` Email contact form
+
+## Maturity Scoring
+
+- Category scores are converted from 1-5 scale to 0-100
+- Overall score is the average of category scores
+- Maturity stages:
+  - Explorer: 0-25%
+  - Builder: 26-50%
+  - Integrator: 51-75%
+  - Market Shaper: 76-100%
+
+## Recommendation Logic
+
+- Recommendation set 1: Based on maturity stage
+- Recommendation sets 2 and 3: Based on the two lowest enablers
+- For each lowest enabler, recommendation content changes by threshold:
+  - Under 50%
+  - 50% And Above
+
+## Local Storage Keys
+
+- `answers`: Question responses
+- `profile`: User details
+
+## Project Structure
+
+- `app/page.tsx`: Start page
+- `app/assessment/page.tsx`: Questionnaire UI
+- `app/user-info/page.tsx`: User information form
+- `app/results/page.tsx`: Results, recommendations, PDF download
+- `app/contact/page.tsx`: Contact form
+- `app/components-site-header.tsx`: Shared header/nav
+- `app/components-thread-background.tsx`: Shared thread background layer
+- `app/globals.css`: Global theme and print styles
+- `lib/enablers.ts`: Enabler definitions
+- `lib/questions.ts`: Question bank
+- `lib/scoring.ts`: Scoring and maturity calculations
+- `lib/recommendations.ts`: Recommendation content and variants
+
+## Run Locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Quality Checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+```
 
-## Learn More
+## Notes
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Primary brand accent color is `#1d9acc`
+- Thread background imagery is sourced from:
+  - `public/Innovation Thread_Style 1 White.png`
+  - `public/Innovation Thread_Style 2 White.png`
+- Results page supports direct PDF download (not browser print workflow)
