@@ -1,10 +1,12 @@
 import { ENABLERS } from "./enablers";
 import { QUESTIONS } from "./questions";
+import { isScoredAnswer, type Answers } from "./answers";
 
 export type ScoreRow = {
   enablerId: string;
   enablerName: string;
   score: number;
+  scoredResponses: number;
 };
 
 export type Maturity = {
@@ -16,15 +18,15 @@ function scoreFromOneToFive(value: number) {
   return Math.round(((value - 1) / 4) * 100);
 }
 
-export function calculateCategoryScores(answers: Record<string, number>): ScoreRow[] {
+export function calculateCategoryScores(answers: Answers): ScoreRow[] {
   return ENABLERS.map((enabler) => {
     const enablerQuestions = QUESTIONS.filter((q) => q.enablerId === enabler.id);
     const values = enablerQuestions
       .map((q) => answers[q.id])
-      .filter((value): value is number => typeof value === "number");
+      .filter(isScoredAnswer);
 
     if (values.length === 0) {
-      return { enablerId: enabler.id, enablerName: enabler.name, score: 0 };
+      return { enablerId: enabler.id, enablerName: enabler.name, score: 0, scoredResponses: 0 };
     }
 
     const avg = values.reduce((total, value) => total + value, 0) / values.length;
@@ -32,17 +34,20 @@ export function calculateCategoryScores(answers: Record<string, number>): ScoreR
       enablerId: enabler.id,
       enablerName: enabler.name,
       score: scoreFromOneToFive(avg),
+      scoredResponses: values.length,
     };
   });
 }
 
 export function calculateOverallScore(categoryScores: ScoreRow[]) {
-  if (categoryScores.length === 0) {
+  const scoredCategories = categoryScores.filter((row) => row.scoredResponses > 0);
+
+  if (scoredCategories.length === 0) {
     return 0;
   }
 
-  const total = categoryScores.reduce((sum, row) => sum + row.score, 0);
-  return Math.round(total / categoryScores.length);
+  const total = scoredCategories.reduce((sum, row) => sum + row.score, 0);
+  return Math.round(total / scoredCategories.length);
 }
 
 export function maturityFromScore(score: number): Maturity {

@@ -3,7 +3,7 @@ import type { EnablerId } from "./enablers";
 type RecommendationSet = { title: string; bullets: string[] };
 
 export const ENABLER_RECS: Record<EnablerId, { under50: RecommendationSet; overOrEqual50: RecommendationSet }> = {
-  alignment: {
+  strategy: {
     under50: {
       title: "Strengthen Strategic Alignment For Foundation Stage",
       bullets: [
@@ -21,7 +21,7 @@ export const ENABLER_RECS: Record<EnablerId, { under50: RecommendationSet; overO
       ],
     },
   },
-  business_value: {
+  data: {
     under50: {
       title: "Increase Business Value For Early Delivery",
       bullets: [
@@ -39,7 +39,7 @@ export const ENABLER_RECS: Record<EnablerId, { under50: RecommendationSet; overO
       ],
     },
   },
-  test_learn: {
+  technology: {
     under50: {
       title: "Build Test And Learn Foundations",
       bullets: [
@@ -57,7 +57,7 @@ export const ENABLER_RECS: Record<EnablerId, { under50: RecommendationSet; overO
       ],
     },
   },
-  roles_capability: {
+  talent: {
     under50: {
       title: "Clarify Roles And Teaming Basics",
       bullets: [
@@ -75,7 +75,7 @@ export const ENABLER_RECS: Record<EnablerId, { under50: RecommendationSet; overO
       ],
     },
   },
-  tech_data_ai: {
+  operating_model: {
     under50: {
       title: "Stabilize Tech Data And AI Foundations",
       bullets: [
@@ -93,7 +93,7 @@ export const ENABLER_RECS: Record<EnablerId, { under50: RecommendationSet; overO
       ],
     },
   },
-  org_capability: {
+  governance: {
     under50: {
       title: "Build Organization Capability At Baseline",
       bullets: [
@@ -111,7 +111,7 @@ export const ENABLER_RECS: Record<EnablerId, { under50: RecommendationSet; overO
       ],
     },
   },
-  change_management: {
+  culture: {
     under50: {
       title: "Establish Change Management Foundations",
       bullets: [

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import SiteHeader from "@/app/components-site-header";
 import ThreadBackground from "@/app/components-thread-background";
+import { isAnswered, type Answers } from "@/lib/answers";
 import { ENABLER_RECS, MATURITY_RECS } from "@/lib/recommendations";
 import {
   calculateCategoryScores,
@@ -138,7 +139,7 @@ export default function ResultsPage() {
     () => "{}",
   );
 
-  const answers = useMemo<Record<string, number>>(() => {
+  const answers = useMemo<Answers>(() => {
     try {
       return JSON.parse(answersRaw);
     } catch {
@@ -230,7 +231,12 @@ export default function ResultsPage() {
     }),
   ];
 
-  if (categoryScores.every((row) => row.score === 0)) {
+  const hasCompletedAssessment = useMemo(
+    () => Object.values(answers).some((value) => isAnswered(value)),
+    [answers],
+  );
+
+  if (!hasCompletedAssessment) {
     return (
       <div className="relative min-h-screen overflow-hidden bg-[var(--brand-bg)]">
         <ThreadBackground variant={1} />

@@ -1,11 +1,11 @@
 export type EnablerId =
-  | "alignment"
-  | "business_value"
-  | "test_learn"
-  | "roles_capability"
-  | "tech_data_ai"
-  | "org_capability"
-  | "change_management";
+  | "strategy"
+  | "data"
+  | "technology"
+  | "talent"
+  | "operating_model"
+  | "governance"
+  | "culture";
 
 export type Enabler = {
   id: EnablerId;
@@ -16,45 +16,45 @@ export type Enabler = {
 
 export const ENABLERS: Enabler[] = [
   {
-    id: "alignment",
+    id: "strategy",
     order: 1,
-    shortName: "Broad alignment",
-    name: "Broad Alignment on purpose, with strategy linked to execution",
+    shortName: "Strategy and ambition",
+    name: "AI strategy is clearly defined and connected to business outcomes",
   },
   {
-    id: "business_value",
+    id: "data",
     order: 2,
-    shortName: "Business value",
-    name: "Rapid business improvements focused on realizing business value",
+    shortName: "Data and analytics foundation",
+    name: "Data is trusted, accessible, and ready to fuel AI",
   },
   {
-    id: "test_learn",
+    id: "technology",
     order: 3,
-    shortName: "Test and learn",
-    name: "Empowered decision makers with test and learn behaviours",
+    shortName: "Technology and AI infrastructure",
+    name: "Infrastructure is secure, flexible, and built to scale",
   },
   {
-    id: "roles_capability",
+    id: "talent",
     order: 4,
-    shortName: "Roles and teaming",
-    name: "New roles, capabilities and teaming structures",
+    shortName: "Talent and digital literacy",
+    name: "People have the skills and confidence to work effectively with AI",
   },
   {
-    id: "tech_data_ai",
+    id: "operating_model",
     order: 5,
-    shortName: "Tech, data and AI",
-    name: "Scalable and flexible tech, data and AI models",
+    shortName: "Operating model and agility",
+    name: "Workflows and structures are redesigned around AI, not just adapted",
   },
   {
-    id: "org_capability",
+    id: "governance",
     order: 6,
-    shortName: "Capability building",
-    name: "Building capabilities across the organisation at scale",
+    shortName: "Governance and responsible AI",
+    name: "AI is governed responsibly with clear accountability and oversight",
   },
   {
-    id: "change_management",
+    id: "culture",
     order: 7,
-    shortName: "Change management",
-    name: "Strong change management to bring everyone on the journey",
+    shortName: "Culture and change management",
+    name: "Culture and leadership actively drive AI adoption across the organisation",
   },
 ];
