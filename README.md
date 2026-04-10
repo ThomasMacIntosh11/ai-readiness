@@ -76,3 +76,4 @@ npm run build
   - `public/Innovation Thread_Style 1 White.png`
   - `public/Innovation Thread_Style 2 White.png`
 - Results page supports direct PDF download (not browser print workflow)
+# ai-readiness
