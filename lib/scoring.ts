@@ -10,12 +10,16 @@ export type ScoreRow = {
 };
 
 export type Maturity = {
-  label: "Explorer" | "Builder" | "Integrator" | "Market Shaper";
+  label: "Explorer" | "Pilot" | "Builder" | "Integrator" | "Transformer";
   range: string;
 };
 
-function scoreFromOneToFive(value: number) {
-  return Math.round(((value - 1) / 4) * 100);
+function scoreFromAnswered(totalPoints: number, answeredCount: number) {
+  if (answeredCount === 0) {
+    return 0;
+  }
+
+  return Math.round((totalPoints / (answeredCount * 5)) * 100);
 }
 
 export function calculateCategoryScores(answers: Answers): ScoreRow[] {
@@ -29,25 +33,21 @@ export function calculateCategoryScores(answers: Answers): ScoreRow[] {
       return { enablerId: enabler.id, enablerName: enabler.name, score: 0, scoredResponses: 0 };
     }
 
-    const avg = values.reduce((total, value) => total + value, 0) / values.length;
+    const totalPoints = values.reduce((total, value) => total + value, 0);
     return {
       enablerId: enabler.id,
       enablerName: enabler.name,
-      score: scoreFromOneToFive(avg),
+      score: scoreFromAnswered(totalPoints, values.length),
       scoredResponses: values.length,
     };
   });
 }
 
-export function calculateOverallScore(categoryScores: ScoreRow[]) {
-  const scoredCategories = categoryScores.filter((row) => row.scoredResponses > 0);
+export function calculateOverallScore(answers: Answers) {
+  const values = QUESTIONS.map((q) => answers[q.id]).filter(isScoredAnswer);
+  const totalPoints = values.reduce((sum, value) => sum + value, 0);
 
-  if (scoredCategories.length === 0) {
-    return 0;
-  }
-
-  const total = scoredCategories.reduce((sum, row) => sum + row.score, 0);
-  return Math.round(total / scoredCategories.length);
+  return scoreFromAnswered(totalPoints, values.length);
 }
 
 export function maturityFromScore(score: number): Maturity {
@@ -55,12 +55,15 @@ export function maturityFromScore(score: number): Maturity {
     return { label: "Explorer", range: "0-25%" };
   }
   if (score <= 50) {
-    return { label: "Builder", range: "26-50%" };
+    return { label: "Pilot", range: "26-50%" };
   }
-  if (score <= 75) {
-    return { label: "Integrator", range: "51-75%" };
+  if (score <= 70) {
+    return { label: "Builder", range: "51-70%" };
   }
-  return { label: "Market Shaper", range: "76-100%" };
+  if (score <= 85) {
+    return { label: "Integrator", range: "71-85%" };
+  }
+  return { label: "Transformer", range: "86-100%" };
 }
 
 export function lowestCategories(categoryScores: ScoreRow[], count: number) {

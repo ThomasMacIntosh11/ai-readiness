@@ -131,37 +131,50 @@ export const ENABLER_RECS: Record<EnablerId, { under50: RecommendationSet; overO
   },
 };
 
-export const MATURITY_RECS: Record<string, { title: string; bullets: string[] }> = {
+export const MATURITY_RECS: Record<string, { title: string; subtitle: string; bullets: string[] }> = {
   Explorer: {
-    title: "Explorer: Establish Core Foundations",
+    title: "What to focus on in the next 90 days",
+    subtitle: "Level 1 - Explorer (0-25%)",
     bullets: [
-      "Align leaders on why AI matters and where value will come from",
-      "Select a small number of priority use cases and test quickly",
-      "Set minimum governance and delivery guardrails",
+      "Identify 3 to 5 practical AI use cases",
+      "Enable a small group of teams to start using AI",
+      "Set basic guardrails for AI usage",
+    ],
+  },
+  Pilot: {
+    title: "What to focus on in the next 90 days",
+    subtitle: "Level 2 - Pilot (26-50%)",
+    bullets: [
+      "Prioritize a small number of high-value use cases",
+      "Turn one successful pilot into a repeatable model",
+      "Define ownership for AI initiatives",
     ],
   },
   Builder: {
-    title: "Builder: Improve Repeatability",
+    title: "What to focus on in the next 90 days",
+    subtitle: "Level 3 - Builder (51-70%)",
     bullets: [
-      "Standardize experiment design, delivery, and measurement",
-      "Formalize how use cases are prioritized and funded",
-      "Strengthen platform and data readiness for broader scale",
+      "Scale one or two proven use cases across teams",
+      "Define a simple operating model for AI",
+      "Improve consistency in how teams use AI",
     ],
   },
   Integrator: {
-    title: "Integrator: Embed And Scale",
+    title: "What to focus on in the next 90 days",
+    subtitle: "Level 4 - Integrator (71-85%)",
     bullets: [
-      "Integrate AI into core operating processes and decision making",
-      "Expand capability building across all major business units",
-      "Harden model governance, monitoring, and risk controls",
+      "Standardize how AI is used in key workflows",
+      "Track and measure business impact",
+      "Strengthen governance and controls",
     ],
   },
-  "Market Shaper": {
-    title: "Market Shaper: Optimize And Differentiate",
+  Transformer: {
+    title: "What to focus on in the next 90 days",
+    subtitle: "Level 5 - Transformer (86-100%)",
     bullets: [
-      "Optimize portfolio value realization with continuous reprioritization",
-      "Use AI to unlock new products, services, and business models",
-      "Advance governance maturity while accelerating innovation",
+      "Expand AI into new value-creating areas",
+      "Continuously improve performance and efficiency",
+      "Invest in advanced capabilities and talent",
     ],
   },
 };

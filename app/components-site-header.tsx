@@ -1,24 +1,16 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export default function SiteHeader() {
   return (
-    <header className="bg-[var(--brand-accent)] no-print">
-      <div className="mx-auto flex w-full max-w-[980px] items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-4">
-          <Image src="/adaptovate-logo.png" alt="Adaptovate Logo" width={86} height={46} priority />
-          <p className="text-lg font-semibold text-white md:text-xl">AI Readiness Self-Assessment</p>
+    <div className="no-print">
+      <div className="mx-auto flex w-full max-w-[1200px] justify-end px-6 pt-6">
+        <Link
+          href="/contact"
+          className="inline-flex items-center rounded-full border border-[var(--brand-accent)]/20 bg-white px-5 py-2.5 text-sm font-semibold text-[var(--brand-accent-strong)] shadow-[0_10px_25px_rgba(17,24,39,0.05)] transition hover:border-[var(--brand-accent)]/35 hover:bg-[var(--brand-accent)]/5"
+        >
+          Contact ADAPTOVATE
         </Link>
-
-        <nav className="flex items-center gap-6 text-sm text-white/90">
-          <Link href="/assessment" className="hover:text-white">
-            Take assessment
-          </Link>
-          <Link href="/contact" className="hover:text-white">
-            Contact
-          </Link>
-        </nav>
       </div>
-    </header>
+    </div>
   );
 }
