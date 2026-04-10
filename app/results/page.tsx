@@ -161,7 +161,7 @@ function MaturityJourneyGraph({ score }: { score: number }) {
           </defs>
 
           <line x1="48" y1="250" x2="690" y2="250" stroke="var(--brand-ink)" strokeWidth="3.5" />
-          <line x1="48" y1="40" x2="48" y2="266" stroke="var(--brand-ink)" strokeWidth="3.5" />
+          <line x1="48" y1="40" x2="48" y2="250" stroke="var(--brand-ink)" strokeWidth="3.5" />
           <text x="366" y="298" textAnchor="middle" fontSize="19" fill="var(--brand-ink)" fontWeight="600">
             Organization Maturity
           </text>
@@ -409,7 +409,6 @@ export default function ResultsPage() {
   const lowestScore = scoredCategoryRows.length > 0 ? Math.min(...scoredCategoryRows.map((row) => row.score)) : null;
   const highestScore = scoredCategoryRows.length > 0 ? Math.max(...scoredCategoryRows.map((row) => row.score)) : null;
   const maturityRec = MATURITY_RECS[maturity.label];
-  const recommendationItems = [maturityRec];
 
   const hasCompletedAssessment = useMemo(
     () => Object.values(answers).some((value) => isAnswered(value)),
@@ -540,18 +539,16 @@ export default function ResultsPage() {
               </motion.section>
 
               <motion.section className="rounded-2xl bg-[var(--brand-surface)] p-8 shadow-[0_4px_16px_rgba(17,24,39,0.08)] print-card print-page-break" variants={panelReveal}>
-              <h2 className="text-2xl font-semibold text-[var(--brand-ink)]">Recommendations</h2>
+              <h2 className="text-2xl font-semibold text-[var(--brand-ink)]">What to focus on in the next 90 days</h2>
+              <p className="mt-1 text-sm font-medium text-[var(--brand-muted)]">{maturityRec.subtitle}</p>
 
               <div className="mt-5 space-y-4">
-                {recommendationItems.map((rec, index) => (
-                  <div key={`${rec.title}-${index}`} className="rounded-xl bg-[var(--brand-bg)] p-5">
-                    <p className="text-xl font-semibold text-[#1f2937]">{rec.title}</p>
-                    <p className="mt-1 text-sm font-medium text-[var(--brand-muted)]">{rec.subtitle}</p>
-                    <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-[#374151]">
-                      {rec.bullets.map((bullet) => (
-                        <li key={bullet}>{bullet}</li>
-                      ))}
-                    </ul>
+                {maturityRec.items.map((item, index) => (
+                  <div key={`${item.title}-${index}`} className="rounded-xl bg-[var(--brand-bg)] p-5">
+                    <p className="text-xl font-semibold text-[#1f2937]">
+                      {index + 1}. {item.title}
+                    </p>
+                    <p className="mt-2 text-base text-[#374151]">{item.subtitle}</p>
                   </div>
                 ))}
               </div>
@@ -567,6 +564,23 @@ export default function ResultsPage() {
               </motion.button>
               </motion.section>
             </div>
+
+            <motion.div
+              className="mt-8 flex justify-center no-print"
+              initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={transitionForReducedMotion(!!reducedMotion, 0.35)}
+            >
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand-accent)] px-6 py-3 text-sm font-semibold text-white hover:bg-[var(--brand-accent-strong)]"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+                </svg>
+                Get a free readout of your report
+              </Link>
+            </motion.div>
           </div>
         </motion.main>
       </div>

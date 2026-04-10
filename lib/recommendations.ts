@@ -131,50 +131,95 @@ export const ENABLER_RECS: Record<EnablerId, { under50: RecommendationSet; overO
   },
 };
 
-export const MATURITY_RECS: Record<string, { title: string; subtitle: string; bullets: string[] }> = {
+type FocusItem = {
+  title: string;
+  subtitle: string;
+};
+
+export const MATURITY_RECS: Record<string, { subtitle: string; items: FocusItem[] }> = {
   Explorer: {
-    title: "What to focus on in the next 90 days",
     subtitle: "Level 1 - Explorer (0-25%)",
-    bullets: [
-      "Identify 3 to 5 practical AI use cases",
-      "Enable a small group of teams to start using AI",
-      "Set basic guardrails for AI usage",
+    items: [
+      {
+        title: "Identify 3 to 5 practical AI use cases",
+        subtitle: "Focus on areas where AI can improve speed, quality, or decision-making within existing workflows.",
+      },
+      {
+        title: "Enable a small group of teams to start using AI",
+        subtitle: "Provide access to tools and simple guidance. Focus on real work, not just training.",
+      },
+      {
+        title: "Set basic guardrails for AI usage",
+        subtitle: "Define what is acceptable, what data can be used, and who is responsible.",
+      },
     ],
   },
   Pilot: {
-    title: "What to focus on in the next 90 days",
     subtitle: "Level 2 - Pilot (26-50%)",
-    bullets: [
-      "Prioritize a small number of high-value use cases",
-      "Turn one successful pilot into a repeatable model",
-      "Define ownership for AI initiatives",
+    items: [
+      {
+        title: "Prioritize a small number of high-value use cases",
+        subtitle: "Align leadership around 2 to 3 use cases with clear business impact.",
+      },
+      {
+        title: "Turn one successful pilot into a repeatable model",
+        subtitle: "Document how it works and apply it in at least one additional team.",
+      },
+      {
+        title: "Define ownership for AI initiatives",
+        subtitle: "Make it clear who is responsible for outcomes and decisions.",
+      },
     ],
   },
   Builder: {
-    title: "What to focus on in the next 90 days",
     subtitle: "Level 3 - Builder (51-70%)",
-    bullets: [
-      "Scale one or two proven use cases across teams",
-      "Define a simple operating model for AI",
-      "Improve consistency in how teams use AI",
+    items: [
+      {
+        title: "Scale one or two proven use cases across teams",
+        subtitle: "Select use cases that are already delivering value and expand them with clear ownership.",
+      },
+      {
+        title: "Define a simple operating model for AI",
+        subtitle: "Clarify how use cases are selected, managed, and scaled.",
+      },
+      {
+        title: "Improve consistency in how teams use AI",
+        subtitle: "Introduce simple standards or playbooks for priority workflows.",
+      },
     ],
   },
   Integrator: {
-    title: "What to focus on in the next 90 days",
     subtitle: "Level 4 - Integrator (71-85%)",
-    bullets: [
-      "Standardize how AI is used in key workflows",
-      "Track and measure business impact",
-      "Strengthen governance and controls",
+    items: [
+      {
+        title: "Standardize how AI is used in key workflows",
+        subtitle: "Ensure consistency in how teams apply AI across similar tasks.",
+      },
+      {
+        title: "Track and measure business impact",
+        subtitle: "Link AI initiatives to clear outcomes such as time saved, cost reduction, or revenue impact.",
+      },
+      {
+        title: "Strengthen governance and controls",
+        subtitle: "Ensure accountability, monitoring, and risk management keep pace with adoption.",
+      },
     ],
   },
   Transformer: {
-    title: "What to focus on in the next 90 days",
     subtitle: "Level 5 - Transformer (86-100%)",
-    bullets: [
-      "Expand AI into new value-creating areas",
-      "Continuously improve performance and efficiency",
-      "Invest in advanced capabilities and talent",
+    items: [
+      {
+        title: "Expand AI into new value-creating areas",
+        subtitle: "Identify opportunities for new products, services, or business models.",
+      },
+      {
+        title: "Continuously improve performance and efficiency",
+        subtitle: "Refine workflows, models, and outputs to increase impact.",
+      },
+      {
+        title: "Invest in advanced capabilities and talent",
+        subtitle: "Strengthen expertise in areas such as automation, orchestration, and AI-driven decision-making.",
+      },
     ],
   },
 };
