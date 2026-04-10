@@ -106,7 +106,7 @@ export const heroStaggerItemStatic: Variants = {
   visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0 } },
 };
 
-export function transitionForReducedMotion(reducedMotion: boolean, fallbackDuration = MOTION_DURATION.medium): Transition {
+export function transitionForReducedMotion(reducedMotion: boolean, fallbackDuration: number = MOTION_DURATION.medium): Transition {
   if (reducedMotion) {
     return { duration: 0 };
   }
