@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo, useSyncExternalStore, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 
 import SiteHeader from "@/app/components-site-header";
@@ -102,19 +102,15 @@ function scoreToJourneyT(score: number) {
   return (stageIndex + progressInStage) / totalStages;
 }
 
-function articleFor(label: string) {
-  return /^[aeiou]/i.test(label) ? "an" : "a";
-}
-
 function benchmarkStatus(score: number) {
-  if (score > 80) {
-    return { label: "Strong", className: "bg-[#dff4e8] text-[#1f7a4d]" };
+  if (score < 50) {
+    return { label: "Growth opportunity", className: "bg-[#fde2e8] text-[#bf2950]" };
   }
-  if (score >= 50) {
+  if (score <= 80) {
     return { label: "Developing", className: "bg-[#fff3cd] text-[#946200]" };
   }
 
-  return { label: "Growth edge", className: "bg-[#fde2e8] text-[#bf2950]" };
+  return { label: "Strong", className: "bg-[#dff4e8] text-[#1f7a4d]" };
 }
 
 function MaturityJourneyGraph({ score }: { score: number }) {
@@ -167,9 +163,7 @@ function MaturityJourneyGraph({ score }: { score: number }) {
         })}
       </div>
 
-      <p className="mt-6 text-center text-lg font-semibold text-[var(--brand-ink)]">Organization Maturity</p>
-
-      <div className="mt-3 overflow-x-auto">
+      <div className="mt-6 overflow-x-auto">
         <svg viewBox="0 0 740 320" className="h-[320px] min-w-[680px] w-full">
           <defs>
             <linearGradient id="journey-area" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -182,8 +176,12 @@ function MaturityJourneyGraph({ score }: { score: number }) {
               <stop offset="100%" stopColor="var(--brand-accent-strong)" stopOpacity="0.95" />
             </linearGradient>
           </defs>
+
           <line x1="48" y1="250" x2="690" y2="250" stroke="var(--brand-ink)" strokeWidth="3.5" />
           <line x1="48" y1="40" x2="48" y2="250" stroke="var(--brand-ink)" strokeWidth="3.5" />
+          <text x="366" y="298" textAnchor="middle" fontSize="19" fill="var(--brand-ink)" fontWeight="600">
+            Organization Maturity
+          </text>
 
           {[80, 140, 200].map((y) => (
             <line key={y} x1="48" y1={y} x2="690" y2={y} stroke="rgba(107,114,128,0.14)" strokeDasharray="4 8" />
@@ -320,10 +318,8 @@ function subscribeToStorage(onStoreChange: () => void) {
 
 export default function ResultsPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const reducedMotion = useReducedMotion();
   const [isExportingPdf, setIsExportingPdf] = useState(false);
-  const hasAutoDownloadedRef = useRef(false);
   const answersRaw = useSyncExternalStore(
     subscribeToStorage,
     () => (typeof window === "undefined" ? "{}" : getStoredAnswers()),
@@ -351,7 +347,7 @@ export default function ResultsPage() {
     }
   }, [profileRaw]);
 
-  const onDownloadPdf = useCallback(async () => {
+  const onDownloadPdf = async () => {
     if (typeof window === "undefined" || isExportingPdf) {
       return;
     }
@@ -399,7 +395,15 @@ export default function ResultsPage() {
     } finally {
       setIsExportingPdf(false);
     }
-  }, [isExportingPdf]);
+  };
+  const onRetake = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("answers");
+      localStorage.removeItem("profile");
+    }
+    router.push("/assessment");
+  };
+
   const { categoryScores, overallScore } = useMemo(() => {
     const scores = calculateCategoryScores(answers);
     return {
@@ -410,7 +414,6 @@ export default function ResultsPage() {
 
   const maturity = maturityFromScore(overallScore);
   const participantFirstName = profile.fullName?.trim().split(/\s+/)[0] || "Participant";
-  const maturityArticle = articleFor(maturity.label);
   const stageDescription = MATURITY_STAGE_DESCRIPTIONS[maturity.label as keyof typeof MATURITY_STAGE_DESCRIPTIONS];
   const maturityRec = MATURITY_RECS[maturity.label];
 
@@ -418,17 +421,6 @@ export default function ResultsPage() {
     () => Object.values(answers).some((value) => isAnswered(value)),
     [answers],
   );
-
-  useEffect(() => {
-    if (searchParams.get("download") !== "1" || hasAutoDownloadedRef.current || !hasCompletedAssessment || isExportingPdf) {
-      return;
-    }
-
-    hasAutoDownloadedRef.current = true;
-    void onDownloadPdf().finally(() => {
-      router.replace("/results");
-    });
-  }, [hasCompletedAssessment, isExportingPdf, onDownloadPdf, router, searchParams]);
 
   if (!hasCompletedAssessment) {
     return (
@@ -467,13 +459,12 @@ export default function ResultsPage() {
                   variants={heroStaggerItem}
                 >
                   <span className="text-[var(--brand-accent-strong)]">{participantFirstName}</span>, your organization is{" "}
-                  {maturityArticle} <span className="text-[var(--brand-accent-strong)]">AI {maturity.label}</span>.
+                  an <span className="text-[var(--brand-accent-strong)]">AI {maturity.label}</span>.
                 </motion.p>
                 <motion.p
                   className="mt-4 max-w-3xl text-base leading-7 text-[var(--brand-muted)] md:text-lg"
                   variants={heroStaggerItem}
                 >
-                  <span className="font-semibold text-[var(--brand-accent-strong)]">About You: </span>
                   {stageDescription}
                 </motion.p>
               </motion.div>
@@ -486,7 +477,7 @@ export default function ResultsPage() {
                   whileTap={!isExportingPdf && !reducedMotion ? { scale: 0.98 } : undefined}
                   className="inline-flex rounded-lg bg-[var(--brand-accent)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--brand-accent-strong)]"
                 >
-                  {isExportingPdf ? "Generating report..." : "Download Report"}
+                  {isExportingPdf ? "Generating report..." : "Download report"}
                 </motion.button>
               </div>
             </div>
@@ -534,7 +525,7 @@ export default function ResultsPage() {
               <h2 className="text-2xl font-semibold text-[var(--brand-ink)]">What to focus on in the next 90 days</h2>
               <p className="mt-1 text-sm font-medium text-[var(--brand-muted)]">{maturityRec.subtitle}</p>
 
-              <div className="mt-5 grid gap-4 lg:grid-cols-3">
+              <div className="mt-5 space-y-4">
                 {maturityRec.items.map((item, index) => (
                   <div key={`${item.title}-${index}`} className="rounded-xl bg-[var(--brand-bg)] p-5">
                     <p className="text-xl font-semibold text-[#1f2937]">
@@ -544,6 +535,16 @@ export default function ResultsPage() {
                   </div>
                 ))}
               </div>
+
+              <motion.button
+                type="button"
+                onClick={onRetake}
+                whileHover={reducedMotion ? undefined : { y: -1 }}
+                whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+                className="mt-6 inline-flex rounded-lg bg-[var(--brand-accent)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--brand-accent-strong)] no-print"
+              >
+                Retake assessment
+              </motion.button>
               </motion.section>
 
               <motion.section className="rounded-2xl bg-[var(--brand-surface)] p-8 shadow-[0_4px_16px_rgba(17,24,39,0.08)] print-card" variants={panelReveal}>
@@ -565,15 +566,15 @@ export default function ResultsPage() {
                         </div>
                       </div>
 
-                      <div className="relative mt-4">
+                      <div className="relative mt-4 pb-7">
                         <div
-                          className="pointer-events-none absolute top-4 -translate-x-1/2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-ink)]"
+                          className="pointer-events-none absolute top-6 -translate-x-1/2 text-[10px] font-semibold uppercase tracking-[0.08em] text-black"
                           style={{ left: `${average}%` }}
                         >
                           avg.
                         </div>
                         <div
-                          className="pointer-events-none absolute -top-0.5 bottom-0 w-px -translate-x-1/2 bg-[#6b7280]/70"
+                          className="pointer-events-none absolute top-3 h-3 w-px -translate-x-1/2 bg-[#6b7280]/70"
                           style={{ left: `${average}%` }}
                           aria-hidden="true"
                         />
