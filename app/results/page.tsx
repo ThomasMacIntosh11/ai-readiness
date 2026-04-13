@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useSyncExternalStore, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 
 import SiteHeader from "@/app/components-site-header";
@@ -106,13 +106,11 @@ function articleFor(label: string) {
   return /^[aeiou]/i.test(label) ? "an" : "a";
 }
 
-function benchmarkStatus(score: number, average: number) {
-  const gap = score - average;
-
-  if (gap >= 15) {
+function benchmarkStatus(score: number) {
+  if (score > 80) {
     return { label: "Strong", className: "bg-[#dff4e8] text-[#1f7a4d]" };
   }
-  if (gap >= 0) {
+  if (score >= 50) {
     return { label: "Developing", className: "bg-[#fff3cd] text-[#946200]" };
   }
 
@@ -169,7 +167,9 @@ function MaturityJourneyGraph({ score }: { score: number }) {
         })}
       </div>
 
-      <div className="mt-6 overflow-x-auto">
+      <p className="mt-6 text-center text-lg font-semibold text-[var(--brand-ink)]">Organization Maturity</p>
+
+      <div className="mt-3 overflow-x-auto">
         <svg viewBox="0 0 740 320" className="h-[320px] min-w-[680px] w-full">
           <defs>
             <linearGradient id="journey-area" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -182,12 +182,8 @@ function MaturityJourneyGraph({ score }: { score: number }) {
               <stop offset="100%" stopColor="var(--brand-accent-strong)" stopOpacity="0.95" />
             </linearGradient>
           </defs>
-
           <line x1="48" y1="250" x2="690" y2="250" stroke="var(--brand-ink)" strokeWidth="3.5" />
           <line x1="48" y1="40" x2="48" y2="250" stroke="var(--brand-ink)" strokeWidth="3.5" />
-          <text x="366" y="298" textAnchor="middle" fontSize="19" fill="var(--brand-ink)" fontWeight="600">
-            Organization Maturity
-          </text>
 
           {[80, 140, 200].map((y) => (
             <line key={y} x1="48" y1={y} x2="690" y2={y} stroke="rgba(107,114,128,0.14)" strokeDasharray="4 8" />
@@ -324,8 +320,10 @@ function subscribeToStorage(onStoreChange: () => void) {
 
 export default function ResultsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const reducedMotion = useReducedMotion();
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const hasAutoDownloadedRef = useRef(false);
   const answersRaw = useSyncExternalStore(
     subscribeToStorage,
     () => (typeof window === "undefined" ? "{}" : getStoredAnswers()),
@@ -353,7 +351,7 @@ export default function ResultsPage() {
     }
   }, [profileRaw]);
 
-  const onDownloadPdf = async () => {
+  const onDownloadPdf = useCallback(async () => {
     if (typeof window === "undefined" || isExportingPdf) {
       return;
     }
@@ -401,15 +399,7 @@ export default function ResultsPage() {
     } finally {
       setIsExportingPdf(false);
     }
-  };
-  const onRetake = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("answers");
-      localStorage.removeItem("profile");
-    }
-    router.push("/assessment");
-  };
-
+  }, [isExportingPdf]);
   const { categoryScores, overallScore } = useMemo(() => {
     const scores = calculateCategoryScores(answers);
     return {
@@ -428,6 +418,17 @@ export default function ResultsPage() {
     () => Object.values(answers).some((value) => isAnswered(value)),
     [answers],
   );
+
+  useEffect(() => {
+    if (searchParams.get("download") !== "1" || hasAutoDownloadedRef.current || !hasCompletedAssessment || isExportingPdf) {
+      return;
+    }
+
+    hasAutoDownloadedRef.current = true;
+    void onDownloadPdf().finally(() => {
+      router.replace("/results");
+    });
+  }, [hasCompletedAssessment, isExportingPdf, onDownloadPdf, router, searchParams]);
 
   if (!hasCompletedAssessment) {
     return (
@@ -472,6 +473,7 @@ export default function ResultsPage() {
                   className="mt-4 max-w-3xl text-base leading-7 text-[var(--brand-muted)] md:text-lg"
                   variants={heroStaggerItem}
                 >
+                  <span className="font-semibold text-[var(--brand-accent-strong)]">About You: </span>
                   {stageDescription}
                 </motion.p>
               </motion.div>
@@ -484,7 +486,7 @@ export default function ResultsPage() {
                   whileTap={!isExportingPdf && !reducedMotion ? { scale: 0.98 } : undefined}
                   className="inline-flex rounded-lg bg-[var(--brand-accent)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--brand-accent-strong)]"
                 >
-                  {isExportingPdf ? "Generating report..." : "Download report"}
+                  {isExportingPdf ? "Generating report..." : "Download Report"}
                 </motion.button>
               </div>
             </div>
@@ -532,7 +534,7 @@ export default function ResultsPage() {
               <h2 className="text-2xl font-semibold text-[var(--brand-ink)]">What to focus on in the next 90 days</h2>
               <p className="mt-1 text-sm font-medium text-[var(--brand-muted)]">{maturityRec.subtitle}</p>
 
-              <div className="mt-5 space-y-4">
+              <div className="mt-5 grid gap-4 lg:grid-cols-3">
                 {maturityRec.items.map((item, index) => (
                   <div key={`${item.title}-${index}`} className="rounded-xl bg-[var(--brand-bg)] p-5">
                     <p className="text-xl font-semibold text-[#1f2937]">
@@ -542,16 +544,6 @@ export default function ResultsPage() {
                   </div>
                 ))}
               </div>
-
-              <motion.button
-                type="button"
-                onClick={onRetake}
-                whileHover={reducedMotion ? undefined : { y: -1 }}
-                whileTap={reducedMotion ? undefined : { scale: 0.98 }}
-                className="mt-6 inline-flex rounded-lg bg-[var(--brand-accent)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--brand-accent-strong)] no-print"
-              >
-                Retake assessment
-              </motion.button>
               </motion.section>
 
               <motion.section className="rounded-2xl bg-[var(--brand-surface)] p-8 shadow-[0_4px_16px_rgba(17,24,39,0.08)] print-card" variants={panelReveal}>
@@ -559,7 +551,7 @@ export default function ResultsPage() {
               <motion.div className="mt-5 space-y-3" variants={cardStagger(0.02, 0.05)}>
                 {categoryScores.map((row: ScoreRow) => {
                   const average = DOMAIN_AVERAGE_BY_ENABLER[row.enablerId] ?? 0;
-                  const status = benchmarkStatus(row.score, average);
+                  const status = benchmarkStatus(row.score);
 
                   return (
                     <motion.div key={row.enablerId} className="rounded-xl bg-[var(--brand-bg)] px-5 py-4" variants={fadeInUp}>
@@ -575,7 +567,7 @@ export default function ResultsPage() {
 
                       <div className="relative mt-4">
                         <div
-                          className="pointer-events-none absolute -top-4 -translate-x-1/2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-muted)]"
+                          className="pointer-events-none absolute top-4 -translate-x-1/2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-ink)]"
                           style={{ left: `${average}%` }}
                         >
                           avg.

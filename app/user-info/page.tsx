@@ -47,7 +47,7 @@ export default function UserInfoPage() {
     setIsSubmitting(true);
     localStorage.setItem("profile", JSON.stringify(profile));
     await new Promise((resolve) => setTimeout(resolve, reducedMotion ? 0 : 450));
-    router.push("/results");
+    router.push("/results?download=1");
   };
 
   const isValid = profile.fullName.trim() && profile.organization.trim() && profile.email.trim();
@@ -93,10 +93,6 @@ export default function UserInfoPage() {
                 <p className="flex items-start gap-3">
                   <span className="mt-0.5 text-lg font-semibold text-[#5bb96c]">✓</span>
                   <span>The most common challenges organizations face at this stage</span>
-                </p>
-                <p className="flex items-start gap-3">
-                  <span className="mt-0.5 text-lg font-semibold text-[#5bb96c]">✓</span>
-                  <span>A structured 90-day plan to move forward</span>
                 </p>
                 <p className="flex items-start gap-3">
                   <span className="mt-0.5 text-lg font-semibold text-[#5bb96c]">✓</span>
