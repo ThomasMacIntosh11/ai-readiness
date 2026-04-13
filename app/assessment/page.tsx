@@ -1,85 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 import SiteHeader from "@/app/components-site-header";
 import ThreadBackground from "@/app/components-thread-background";
-import { isAnswered, type Answers, type AnswerValue } from "@/lib/answers";
 import { ENABLERS } from "@/lib/enablers";
-import {
-  chapterPulse,
-  fadeInUp,
-  heroStaggerContainer,
-  heroStaggerItem,
-  milestoneGlow,
-  panelReveal,
-  staggerContainer,
-  transitionForReducedMotion,
-} from "@/lib/motion";
-import { QUESTIONS } from "@/lib/questions";
+import { cardStagger, heroStaggerContainer, heroStaggerItem, panelReveal } from "@/lib/motion";
 
-const SCALE_OPTIONS = [
-  { value: 1 as const, label: "Strongly disagree" },
-  { value: 2 as const, label: "Disagree" },
-  { value: 3 as const, label: "Neutral" },
-  { value: 4 as const, label: "Agree" },
-  { value: 5 as const, label: "Strongly agree" },
-  { value: "N/A" as const, label: "Not sure" },
-];
-const MILESTONE_COPY: Record<number, string> = {
-  25: "Great momentum.",
-  50: "Halfway there.",
-  75: "Strong progress.",
-  100: "Journey complete.",
-};
-
-export default function AssessmentPage() {
-  const router = useRouter();
+export default function AssessmentIntroPage() {
   const reducedMotion = useReducedMotion();
-  const [answers, setAnswers] = useState<Answers>(() => {
-    if (typeof window === "undefined") {
-      return {};
-    }
-
-    try {
-      return JSON.parse(localStorage.getItem("answers") ?? "{}");
-    } catch {
-      return {};
-    }
-  });
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [activeSelection, setActiveSelection] = useState<{ questionId: string; value: AnswerValue } | null>(null);
-
-  const allAnswered = useMemo(() => QUESTIONS.every((question) => isAnswered(answers[question.id])), [answers]);
-  const currentQuestion = QUESTIONS[currentQuestionIndex];
-  const currentEnabler = currentQuestion ? ENABLERS.find((enabler) => enabler.id === currentQuestion.enablerId) : undefined;
-  const progressPercent = Math.round(((currentQuestionIndex + 1) / QUESTIONS.length) * 100);
-  const milestoneCopy = MILESTONE_COPY[progressPercent];
-  const unlockedState = allAnswered ? "All set. Continue to your report." : "Please answer all questions to continue.";
-
-  const onSelect = (questionId: string, value: AnswerValue) => {
-    const next = { ...answers, [questionId]: value };
-    setAnswers(next);
-    localStorage.setItem("answers", JSON.stringify(next));
-  };
-  const onSelectAndAdvance = (questionId: string, value: AnswerValue) => {
-    onSelect(questionId, value);
-    setActiveSelection({ questionId, value });
-
-    const isFinalQuestion = currentQuestionIndex === QUESTIONS.length - 1;
-
-    window.setTimeout(() => {
-      if (isFinalQuestion) {
-        router.push("/user-info");
-        return;
-      }
-
-      setCurrentQuestionIndex((index) => Math.min(QUESTIONS.length - 1, index + 1));
-    }, reducedMotion ? 0 : 220);
-  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[var(--brand-bg)]">
@@ -87,156 +17,78 @@ export default function AssessmentPage() {
       <div className="relative z-10">
         <SiteHeader />
         <motion.main
-          className="mx-auto w-full max-w-[1200px] px-6 py-8"
+          className="mx-auto w-full max-w-[980px] px-6 py-10"
           initial="hidden"
           animate="visible"
-          variants={staggerContainer}
+          variants={cardStagger(0.05, 0.08)}
         >
-          {currentQuestion && (
-            <motion.section
-              className="rounded-2xl bg-[var(--brand-surface)] p-6 shadow-[0_4px_16px_rgba(17,24,39,0.08)] md:p-8"
-              variants={panelReveal}
-            >
-                <motion.div className="flex flex-wrap items-center justify-between gap-3" variants={heroStaggerContainer} initial="hidden" animate="visible">
-                  <motion.p
-                    className="text-base font-semibold text-[var(--brand-muted)]"
-                    key={`chapter-${currentQuestionIndex}`}
-                    variants={chapterPulse}
-                    initial="idle"
-                    animate="active"
-                  >
-                    Question {currentQuestionIndex + 1} of {QUESTIONS.length}
-                  </motion.p>
-                </motion.div>
-
-                <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-[#e5e7eb]">
-                  <motion.div
-                    className="h-full rounded-full bg-[var(--brand-accent)] transition-all"
-                    initial={false}
-                    animate={{ width: `${((currentQuestionIndex + 1) / QUESTIONS.length) * 100}%` }}
-                    transition={transitionForReducedMotion(!!reducedMotion)}
-                    style={{ width: `${((currentQuestionIndex + 1) / QUESTIONS.length) * 100}%` }}
-                  />
-                </div>
-                <AnimatePresence mode="wait">
-                  {milestoneCopy ? (
-                    <motion.p
-                      key={`milestone-${progressPercent}`}
-                      className="mt-3 inline-flex rounded-full bg-[var(--brand-bg)] px-3 py-1 text-xs font-semibold text-[var(--brand-accent)]"
-                      variants={milestoneGlow}
-                      initial="hidden"
-                      animate="visible"
-                      exit={{ opacity: 0, y: -4 }}
-                    >
-                      {milestoneCopy}
-                    </motion.p>
-                  ) : null}
-                </AnimatePresence>
-
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentQuestion.id}
-                    className="mt-5 rounded-xl bg-[var(--brand-bg)] p-5 md:p-6"
-                    initial={reducedMotion ? false : { opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: -6 }}
-                    transition={transitionForReducedMotion(!!reducedMotion)}
-                  >
-                    <motion.p className="text-sm font-semibold uppercase tracking-wide text-[var(--brand-muted)]" variants={heroStaggerItem} initial="hidden" animate="visible">
-                      {currentEnabler ? `${currentEnabler.order}. ${currentEnabler.shortName}` : "Question"}
-                    </motion.p>
-                    <motion.p className="mt-3 text-2xl font-medium leading-[1.25] text-[#1f2937] md:text-3xl" variants={heroStaggerItem} initial="hidden" animate="visible">
-                      {currentQuestion.text}
-                    </motion.p>
-
-                    <div className="mt-5 rounded-xl bg-white p-4 md:p-5">
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-6">
-                        {SCALE_OPTIONS.map((option) => {
-                          const isSelected =
-                            activeSelection?.questionId === currentQuestion.id && activeSelection.value === option.value;
-                          const isNotSure = option.value === "N/A";
-                          return (
-                            <motion.button
-                              key={`${currentQuestion.id}-${option.value}`}
-                              type="button"
-                              onClick={() => onSelectAndAdvance(currentQuestion.id, option.value)}
-                              whileHover={reducedMotion ? undefined : { y: -1 }}
-                              whileTap={reducedMotion ? undefined : { scale: 0.98 }}
-                              className={`rounded-lg border px-3 py-3 text-center text-xs font-semibold transition md:text-sm ${
-                                isSelected
-                                  ? "border-[var(--brand-accent)] bg-[var(--brand-accent)] text-white"
-                                  : isNotSure
-                                    ? "border-[#c7ced9] bg-[#f3f4f6] text-[var(--brand-ink)] hover:border-[var(--brand-accent)]"
-                                    : "border-[#9ca3af] bg-white text-[var(--brand-ink)] hover:border-[var(--brand-accent)]"
-                              }`}
-                              aria-label={`${option.label} for ${currentQuestion.text}`}
-                            >
-                              {option.label}
-                            </motion.button>
-                          );
-                        })}
-                      </div>
-
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-
-                <div className="mt-6 flex items-center justify-between gap-4">
-                  <motion.button
-                    type="button"
-                    onClick={() => setCurrentQuestionIndex((index) => Math.max(0, index - 1))}
-                    disabled={currentQuestionIndex === 0}
-                    whileHover={currentQuestionIndex === 0 || reducedMotion ? undefined : { y: -1 }}
-                    whileTap={currentQuestionIndex === 0 || reducedMotion ? undefined : { scale: 0.98 }}
-                    className={`rounded-lg px-5 py-3 text-sm font-semibold ${
-                      currentQuestionIndex === 0
-                        ? "cursor-not-allowed bg-[#d1d5db] text-white"
-                        : "bg-white text-[var(--brand-ink)] ring-1 ring-[#9ca3af] hover:ring-[var(--brand-accent)]"
-                    }`}
-                  >
-                    Previous
-                  </motion.button>
-                  <motion.button
-                    type="button"
-                    onClick={() => setCurrentQuestionIndex((index) => Math.min(QUESTIONS.length - 1, index + 1))}
-                    disabled={currentQuestionIndex === QUESTIONS.length - 1}
-                    whileHover={currentQuestionIndex === QUESTIONS.length - 1 || reducedMotion ? undefined : { y: -1 }}
-                    whileTap={currentQuestionIndex === QUESTIONS.length - 1 || reducedMotion ? undefined : { scale: 0.98 }}
-                    className={`rounded-lg px-5 py-3 text-sm font-semibold ${
-                      currentQuestionIndex === QUESTIONS.length - 1
-                        ? "cursor-not-allowed bg-[#d1d5db] text-white"
-                        : "bg-[var(--brand-accent)] text-white hover:bg-[var(--brand-accent-strong)]"
-                    }`}
-                  >
-                    Next
-                  </motion.button>
-                </div>
-            </motion.section>
-          )}
-
-          <motion.div
-            className="mt-8 flex items-center justify-between rounded-2xl bg-[var(--brand-surface)] p-6 shadow-[0_4px_16px_rgba(17,24,39,0.08)]"
-            variants={fadeInUp}
-            animate={allAnswered ? { boxShadow: "0 8px 26px rgba(37,99,235,0.18)" } : undefined}
-            transition={transitionForReducedMotion(!!reducedMotion, 0.25)}
+          <motion.section
+            className="rounded-2xl bg-[var(--brand-surface)] p-8 shadow-[0_4px_16px_rgba(17,24,39,0.08)] md:p-10"
+            variants={panelReveal}
           >
-            <p className="text-base text-[var(--brand-muted)]">
-              {unlockedState}
-            </p>
-            <motion.div whileHover={allAnswered && !reducedMotion ? { y: -1 } : undefined} whileTap={allAnswered && !reducedMotion ? { scale: 0.98 } : undefined}>
-              <Link
-                href={allAnswered ? "/user-info" : "#"}
-                aria-disabled={!allAnswered}
-                className={`rounded-lg px-5 py-3 text-sm font-semibold ${
-                  allAnswered
-                    ? "bg-[var(--brand-accent)] text-white hover:bg-[var(--brand-accent-strong)]"
-                    : "pointer-events-none bg-[#9ca3af] text-white"
-                }`}
+            <motion.div className="text-center" variants={heroStaggerContainer} initial="hidden" animate="visible">
+              <motion.div
+                className="inline-flex rounded-full border border-[var(--brand-accent)]/20 bg-[var(--brand-accent)]/8 px-4 py-2 text-sm font-semibold text-[var(--brand-accent-strong)]"
+                variants={heroStaggerItem}
               >
-                Continue
+                How this works
+              </motion.div>
+              <motion.h1 className="mt-5 text-4xl font-semibold tracking-tight text-[var(--brand-ink)] md:text-5xl" variants={heroStaggerItem}>
+                Ready to start?
+              </motion.h1>
+              <motion.p className="mx-auto mt-4 max-w-3xl text-lg leading-8 text-[var(--brand-muted)]" variants={heroStaggerItem}>
+                You&apos;ll answer statements about your organization to reveal your AI maturity, where momentum is building,
+                and where AI work is stuck.
+              </motion.p>
+              <motion.p className="mx-auto mt-3 max-w-3xl text-lg leading-8 text-[var(--brand-muted)]" variants={heroStaggerItem}>
+                If you don&apos;t know the answer or don&apos;t have the information, choose{" "}
+                <span className="font-semibold text-[var(--brand-ink)]">Not sure</span>. It won&apos;t count against your score.
+              </motion.p>
+            </motion.div>
+
+            <motion.div className="mx-auto mt-10 max-w-[760px]" variants={heroStaggerItem}>
+              <p className="text-center text-2xl font-semibold tracking-tight text-[var(--brand-ink)]">
+                The seven sections you&apos;ll move through
+              </p>
+              <div className="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                {ENABLERS.map((enabler) => (
+                  <div key={enabler.id}>
+                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--brand-accent-strong)]">
+                      {enabler.order}. {enabler.shortName}
+                    </p>
+                    <p className="mt-1 text-base leading-7 text-[var(--brand-muted)]">{enabler.name}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div className="mx-auto mt-10 max-w-[760px] text-center" variants={heroStaggerItem}>
+              <p className="text-lg leading-8 text-[var(--brand-muted)]">
+                Your responses are used to prepare your results and are not shared more broadly. By continuing, you agree to our{" "}
+                <Link href="/terms-and-conditions" className="text-sm font-semibold text-[var(--brand-accent-strong)] hover:underline">
+                  Terms and Conditions
+                </Link>
+                , including that ADAPTOVATE may contact you using the details you provide.
+              </p>
+            </motion.div>
+
+            <motion.div className="mt-8 flex flex-wrap items-center justify-center gap-3" variants={heroStaggerItem}>
+              <motion.div whileHover={reducedMotion ? undefined : { y: -2 }} whileTap={reducedMotion ? undefined : { scale: 0.98 }}>
+                <Link
+                  href="/assessment/questions"
+                  className="inline-flex items-center rounded-xl bg-[var(--brand-accent)] px-6 py-4 text-base font-semibold text-white shadow-[0_16px_30px_rgba(29,154,204,0.25)] transition hover:bg-[var(--brand-accent-strong)]"
+                >
+                  Start the assessment
+                </Link>
+              </motion.div>
+              <Link
+                href="/"
+                className="inline-flex items-center rounded-xl border border-[#d1d5db] bg-white px-5 py-4 text-sm font-semibold text-[var(--brand-ink)] transition hover:border-[var(--brand-accent)]/40 hover:text-[var(--brand-accent-strong)]"
+              >
+                Back to home
               </Link>
             </motion.div>
-          </motion.div>
+          </motion.section>
         </motion.main>
       </div>
     </div>

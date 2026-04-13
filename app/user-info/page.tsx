@@ -175,7 +175,9 @@ export default function UserInfoPage() {
                   </motion.button>
                 </div>
               </div>
-              <p className="text-center text-sm text-[var(--brand-muted)]">We&apos;ll only use your email to send your results.</p>
+              <p className="text-center text-sm text-[var(--brand-muted)]">
+                We&apos;ll use your details to send your results and may follow up about the assessment.
+              </p>
             </form>
           </motion.section>
         </motion.main>

@@ -38,7 +38,7 @@ export default function Home() {
                   className="mt-6 inline-flex items-center rounded-full border border-[var(--brand-accent)]/20 bg-[var(--brand-accent)]/8 px-4 py-2 text-sm font-semibold text-[var(--brand-accent-strong)]"
                   variants={item}
                 >
-                  Complete in under 5 minutes
+                  &lt;5 minutes
                 </motion.div>
                 <motion.h1
                   className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--brand-ink)] md:text-6xl"
@@ -47,21 +47,23 @@ export default function Home() {
                   How ready is your organization for AI, really?
                 </motion.h1>
                 <motion.p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--brand-muted)] md:text-xl" variants={item}>
-                  A quick diagnostic based on <span className="font-semibold text-[var(--brand-accent-strong)]">seven capabilities</span> that determine whether AI creates real value or stalls. Most organizations are experimenting with AI. Few are turning that into meaningful impact.
+                  A quick diagnostic based on <span className="font-semibold text-[var(--brand-accent-strong)]">seven capabilities</span> that determine whether AI is creating real value for your organization. Most organizations are experimenting with AI. Few are turning that into meaningful impact.
                 </motion.p>
                 <motion.p className="mt-3 max-w-2xl text-lg leading-8 text-[var(--brand-muted)] md:text-xl" variants={item}>
-                  This 10-minute assessment reveals your organization&apos;s AI maturity, where you&apos;re building momentum,
-                  where you&apos;re stuck, and the one or two shifts that will make the biggest difference.
+                  This <span className="font-semibold text-[var(--brand-accent-strong)]">5 minute assessment</span> will reveal your organization&apos;s AI maturity, where momentum is building, and
+                  where AI work is stuck. You&apos;ll also get concrete next steps to help you get started.
                 </motion.p>
 
                 <motion.div
                   className="mt-8 flex flex-wrap items-center gap-3 text-sm font-medium text-[var(--brand-muted)]"
                   variants={item}
                 >
-                  <span className="inline-flex items-center rounded-full bg-[var(--brand-accent)]/10 px-4 py-2 ring-1 ring-[var(--brand-accent)]/15">10 minutes</span>
                   <span className="inline-flex items-center rounded-full bg-[var(--brand-accent)]/10 px-4 py-2 ring-1 ring-[var(--brand-accent)]/15">35 questions</span>
                   <span className="inline-flex items-center rounded-full bg-[var(--brand-accent)]/10 px-4 py-2 ring-1 ring-[var(--brand-accent)]/15">
                     Personalized maturity profile
+                  </span>
+                  <span className="inline-flex items-center rounded-full bg-[var(--brand-accent)]/10 px-4 py-2 ring-1 ring-[var(--brand-accent)]/15">
+                    Downloadable PDF
                   </span>
                 </motion.div>
 
@@ -105,11 +107,11 @@ export default function Home() {
                 >
                   <div className="absolute inset-x-6 top-0 h-px bg-[linear-gradient(90deg,rgba(29,154,204,0),rgba(29,154,204,0.45),rgba(29,154,204,0))]" />
                   <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--brand-accent-strong)]">
-                    What you&apos;ll uncover
+                    What you&apos;ll uncover...
                   </p>
-                  <div className="mt-5 space-y-4">
-                    <div className="flex items-start gap-4 rounded-2xl bg-white/90 p-5 ring-1 ring-black/5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand-accent)]/12 text-[var(--brand-accent-strong)]">
+                  <div className="mt-4 space-y-3">
+                    <div className="flex items-center gap-4 rounded-2xl bg-white/90 p-4 ring-1 ring-black/5">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center self-center rounded-2xl bg-[var(--brand-accent)]/12 text-[var(--brand-accent-strong)]">
                       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M4 18h16" />
                         <path d="M7 15l3-3 3 2 4-5" />
@@ -119,16 +121,16 @@ export default function Home() {
                         <circle cx="17" cy="9" r="1" fill="currentColor" stroke="none" />
                       </svg>
                     </div>
-                    <div>
-                      <p className="text-base font-semibold text-[var(--brand-ink)]">Where your organization is ready to scale</p>
-                      <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">
+                    <div className="flex-1">
+                      <p className="text-xl font-semibold leading-tight text-[var(--brand-ink)]">Where your organization is ready to scale</p>
+                      <p className="mt-1 text-[0.95rem] leading-5 text-[var(--brand-muted)]">
                         See which capabilities already have momentum and where AI is closest to creating real operational value.
                       </p>
                     </div>
                     </div>
 
-                    <div className="flex items-start gap-4 rounded-2xl bg-white/90 p-5 ring-1 ring-black/5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand-accent)]/12 text-[var(--brand-accent-strong)]">
+                    <div className="flex items-center gap-4 rounded-2xl bg-white/90 p-4 ring-1 ring-black/5">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center self-center rounded-2xl bg-[var(--brand-accent)]/12 text-[var(--brand-accent-strong)]">
                       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M12 3v7" />
                         <path d="M12 16v5" />
@@ -141,25 +143,25 @@ export default function Home() {
                         <circle cx="12" cy="12" r="2.5" />
                       </svg>
                     </div>
-                    <div>
-                      <p className="text-base font-semibold text-[var(--brand-ink)]">What capability gaps are slowing adoption</p>
-                      <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">
+                    <div className="flex-1">
+                      <p className="text-xl font-semibold leading-tight text-[var(--brand-ink)]">What capability gaps are slowing adoption</p>
+                      <p className="mt-1 text-[0.95rem] leading-5 text-[var(--brand-muted)]">
                         Identify the blockers that are preventing experimentation from turning into aligned, repeatable progress.
                       </p>
                     </div>
                     </div>
 
-                    <div className="flex items-start gap-4 rounded-2xl bg-white/90 p-5 ring-1 ring-black/5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand-accent)]/12 text-[var(--brand-accent-strong)]">
+                    <div className="flex items-center gap-4 rounded-2xl bg-white/90 p-4 ring-1 ring-black/5">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center self-center rounded-2xl bg-[var(--brand-accent)]/12 text-[var(--brand-accent-strong)]">
                       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M5 19h14" />
                         <path d="M7 16l4-4 3 2 4-6" />
                         <path d="M15 8h3v3" />
                       </svg>
                     </div>
-                    <div>
-                      <p className="text-base font-semibold text-[var(--brand-ink)]">Which changes will create momentum fastest</p>
-                      <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">
+                    <div className="flex-1">
+                      <p className="text-xl font-semibold leading-tight text-[var(--brand-ink)]">Which changes will create momentum fastest</p>
+                      <p className="mt-1 text-[0.95rem] leading-5 text-[var(--brand-muted)]">
                         Get a clearer sense of the one or two practical shifts most likely to move your organization forward.
                       </p>
                     </div>

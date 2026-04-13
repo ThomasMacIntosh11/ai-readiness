@@ -527,7 +527,33 @@ export default function ResultsPage() {
             </motion.div>
             </motion.section>
 
-            <div className="mt-7 grid gap-7 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:items-start">
+            <div className="mt-7 space-y-7">
+              <motion.section className="rounded-2xl bg-[var(--brand-surface)] p-8 shadow-[0_4px_16px_rgba(17,24,39,0.08)] print-card print-page-break" variants={panelReveal}>
+              <h2 className="text-2xl font-semibold text-[var(--brand-ink)]">What to focus on in the next 90 days</h2>
+              <p className="mt-1 text-sm font-medium text-[var(--brand-muted)]">{maturityRec.subtitle}</p>
+
+              <div className="mt-5 space-y-4">
+                {maturityRec.items.map((item, index) => (
+                  <div key={`${item.title}-${index}`} className="rounded-xl bg-[var(--brand-bg)] p-5">
+                    <p className="text-xl font-semibold text-[#1f2937]">
+                      {index + 1}. {item.title}
+                    </p>
+                    <p className="mt-2 text-base text-[#374151]">{item.subtitle}</p>
+                  </div>
+                ))}
+              </div>
+
+              <motion.button
+                type="button"
+                onClick={onRetake}
+                whileHover={reducedMotion ? undefined : { y: -1 }}
+                whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+                className="mt-6 inline-flex rounded-lg bg-[var(--brand-accent)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--brand-accent-strong)] no-print"
+              >
+                Retake assessment
+              </motion.button>
+              </motion.section>
+
               <motion.section className="rounded-2xl bg-[var(--brand-surface)] p-8 shadow-[0_4px_16px_rgba(17,24,39,0.08)] print-card" variants={panelReveal}>
               <h2 className="text-2xl font-semibold text-[var(--brand-ink)]">Your 7 Domain Scores</h2>
               <motion.div className="mt-5 space-y-3" variants={cardStagger(0.02, 0.05)}>
@@ -567,32 +593,6 @@ export default function ResultsPage() {
                   );
                 })}
               </motion.div>
-              </motion.section>
-
-              <motion.section className="rounded-2xl bg-[var(--brand-surface)] p-8 shadow-[0_4px_16px_rgba(17,24,39,0.08)] print-card print-page-break" variants={panelReveal}>
-              <h2 className="text-2xl font-semibold text-[var(--brand-ink)]">What to focus on in the next 90 days</h2>
-              <p className="mt-1 text-sm font-medium text-[var(--brand-muted)]">{maturityRec.subtitle}</p>
-
-              <div className="mt-5 space-y-4">
-                {maturityRec.items.map((item, index) => (
-                  <div key={`${item.title}-${index}`} className="rounded-xl bg-[var(--brand-bg)] p-5">
-                    <p className="text-xl font-semibold text-[#1f2937]">
-                      {index + 1}. {item.title}
-                    </p>
-                    <p className="mt-2 text-base text-[#374151]">{item.subtitle}</p>
-                  </div>
-                ))}
-              </div>
-
-              <motion.button
-                type="button"
-                onClick={onRetake}
-                whileHover={reducedMotion ? undefined : { y: -1 }}
-                whileTap={reducedMotion ? undefined : { scale: 0.98 }}
-                className="mt-6 inline-flex rounded-lg bg-[var(--brand-accent)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--brand-accent-strong)] no-print"
-              >
-                Retake assessment
-              </motion.button>
               </motion.section>
             </div>
 
