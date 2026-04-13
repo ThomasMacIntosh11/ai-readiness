@@ -78,29 +78,14 @@ export default function UserInfoPage() {
               <motion.h1 className="text-4xl font-semibold tracking-tight text-[var(--brand-ink)] md:text-5xl" variants={heroStaggerItem}>
                 Where should we send your full AI maturity report?
               </motion.h1>
-              <motion.p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[var(--brand-muted)]" variants={heroStaggerItem}>
+              <motion.p className="mx-auto mt-4 max-w-2xl text-lg leading-7 text-[var(--brand-muted)]" variants={heroStaggerItem}>
                 Get a detailed breakdown of what your results mean, along with clear guidance on what to focus on next.
               </motion.p>
             </motion.div>
 
-            <motion.div className="mx-auto mt-8 max-w-[620px] rounded-2xl bg-[var(--brand-bg)] p-4 text-left" variants={fadeInUp}>
-              <div className="flex items-center justify-between text-sm text-[var(--brand-muted)]">
-                <span>Profile completion</span>
-                <span>{completionPercent}%</span>
-              </div>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-[#e5e7eb]">
-                <motion.div
-                  className="h-full rounded-full bg-[var(--brand-accent)]"
-                  initial={false}
-                  animate={{ width: `${completionPercent}%` }}
-                  transition={transitionForReducedMotion(!!reducedMotion, 0.25)}
-                />
-              </div>
-            </motion.div>
-
             <motion.div className="mx-auto mt-8 max-w-[620px] text-left" variants={fadeInUp}>
               <p className="text-2xl font-semibold tracking-tight text-[var(--brand-ink)]">What you&apos;ll receive</p>
-              <div className="space-y-4 text-base text-[#374151]">
+              <div className="mt-5 space-y-3 text-base text-[#374151]">
                 <p className="flex items-start gap-3">
                   <span className="mt-0.5 text-lg font-semibold text-[#5bb96c]">✓</span>
                   <span>A deeper explanation of your AI maturity stage and what it looks like in practice</span>
@@ -118,66 +103,78 @@ export default function UserInfoPage() {
                   <span>What to focus on as you progress to the next level</span>
                 </p>
               </div>
-              <p className="mt-8 text-lg leading-8 text-[var(--brand-ink)]">
-                Built on 7 core capabilities observed across organizations adopting AI at scale.
-              </p>
             </motion.div>
 
             <form onSubmit={onSubmit} className="mx-auto mt-8 max-w-[620px] space-y-4 text-left">
-              <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[#1f2937]">Name</span>
-                <input
-                  value={profile.fullName}
-                  onChange={(event) => setProfile((prev) => ({ ...prev, fullName: event.target.value }))}
-                  className={fieldClassName(profile.fullName.trim().length > 0)}
-                  placeholder="Your name"
-                  required
-                />
-              </label>
-
-              <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[#1f2937]">Organization</span>
-                <input
-                  value={profile.organization}
-                  onChange={(event) => setProfile((prev) => ({ ...prev, organization: event.target.value }))}
-                  className={fieldClassName(profile.organization.trim().length > 0)}
-                  placeholder="Your organization"
-                  required
-                />
-              </label>
-
-              <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_220px]">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block">
-                  <span className="mb-2 block text-sm font-medium text-[#1f2937]">Email address</span>
+                  <span className="mb-2 block text-sm font-medium text-[#1f2937]">Name</span>
                   <input
-                    type="email"
-                    value={profile.email}
-                    onChange={(event) => setProfile((prev) => ({ ...prev, email: event.target.value, role: "" }))}
-                    className={fieldClassName(profile.email.trim().length > 0)}
-                    placeholder="name@company.com"
+                    value={profile.fullName}
+                    onChange={(event) => setProfile((prev) => ({ ...prev, fullName: event.target.value }))}
+                    className={fieldClassName(profile.fullName.trim().length > 0)}
+                    placeholder="Your name"
                     required
                   />
                 </label>
 
-                <div className="flex items-end">
-                  <motion.button
-                    type="submit"
-                    disabled={!isValid || isSubmitting}
-                    whileHover={isValid && !isSubmitting && !reducedMotion ? { y: -1 } : undefined}
-                    whileTap={isValid && !isSubmitting && !reducedMotion ? { scale: 0.98 } : undefined}
-                    className={`w-full rounded-xl px-6 py-4 text-base font-semibold ${
-                      isValid && !isSubmitting
-                        ? "bg-[var(--brand-ink)] text-white hover:bg-black"
-                        : "bg-[#9ca3af] text-white"
-                    }`}
-                  >
-                    {submitLabel}
-                  </motion.button>
-                </div>
+                <label className="block">
+                  <span className="mb-2 block text-sm font-medium text-[#1f2937]">Organization</span>
+                  <input
+                    value={profile.organization}
+                    onChange={(event) => setProfile((prev) => ({ ...prev, organization: event.target.value }))}
+                    className={fieldClassName(profile.organization.trim().length > 0)}
+                    placeholder="Your organization"
+                    required
+                  />
+                </label>
               </div>
+
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-[#1f2937]">Email address</span>
+                <input
+                  type="email"
+                  value={profile.email}
+                  onChange={(event) => setProfile((prev) => ({ ...prev, email: event.target.value, role: "" }))}
+                  className={fieldClassName(profile.email.trim().length > 0)}
+                  placeholder="name@company.com"
+                  required
+                />
+              </label>
+
+              <div className="flex justify-center pt-1">
+                <motion.button
+                  type="submit"
+                  disabled={!isValid || isSubmitting}
+                  whileHover={isValid && !isSubmitting && !reducedMotion ? { y: -1 } : undefined}
+                  whileTap={isValid && !isSubmitting && !reducedMotion ? { scale: 0.98 } : undefined}
+                  className={`min-w-[240px] rounded-xl px-6 py-4 text-base font-semibold ${
+                    isValid && !isSubmitting
+                      ? "bg-[var(--brand-ink)] text-white hover:bg-black"
+                      : "bg-[#9ca3af] text-white"
+                  }`}
+                >
+                  {submitLabel}
+                </motion.button>
+              </div>
+
               <p className="text-center text-sm text-[var(--brand-muted)]">
                 We&apos;ll use your details to send your results and may follow up about the assessment.
               </p>
+
+              <motion.div className="rounded-2xl bg-[var(--brand-bg)] px-4 py-3" variants={fadeInUp}>
+                <div className="flex items-center gap-3">
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#e5e7eb]">
+                    <motion.div
+                      className="h-full rounded-full bg-[var(--brand-accent)]"
+                      initial={false}
+                      animate={{ width: `${completionPercent}%` }}
+                      transition={transitionForReducedMotion(!!reducedMotion, 0.25)}
+                    />
+                  </div>
+                  <span className="text-xs leading-none text-[var(--brand-muted)]">{completionPercent}%</span>
+                </div>
+              </motion.div>
             </form>
           </motion.section>
         </motion.main>

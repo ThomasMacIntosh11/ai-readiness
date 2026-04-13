@@ -20,7 +20,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "strategy_3",
     enablerId: "strategy",
-    text: "3. We are using AI to create new value such as new products or services.",
+    text: "3. We are using AI to create new value (i.e., new products or services).",
   },
   {
     id: "strategy_4",
