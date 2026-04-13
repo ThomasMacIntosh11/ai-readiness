@@ -51,6 +51,7 @@ export default function AssessmentPage() {
     }
   });
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [furthestQuestionIndex, setFurthestQuestionIndex] = useState(0);
   const [activeSelection, setActiveSelection] = useState<{ questionId: string; value: AnswerValue } | null>(null);
 
   const allAnswered = useMemo(() => QUESTIONS.every((question) => isAnswered(answers[question.id])), [answers]);
@@ -77,7 +78,11 @@ export default function AssessmentPage() {
         return;
       }
 
-      setCurrentQuestionIndex((index) => Math.min(QUESTIONS.length - 1, index + 1));
+      setCurrentQuestionIndex((index) => {
+        const nextIndex = Math.min(QUESTIONS.length - 1, index + 1);
+        setFurthestQuestionIndex((furthest) => Math.max(furthest, nextIndex));
+        return nextIndex;
+      });
     }, reducedMotion ? 0 : 220);
   };
 
@@ -181,36 +186,42 @@ export default function AssessmentPage() {
                   </motion.div>
                 </AnimatePresence>
 
-                <div className="mt-6 flex items-center justify-between gap-4">
-                  <motion.button
-                    type="button"
-                    onClick={() => setCurrentQuestionIndex((index) => Math.max(0, index - 1))}
-                    disabled={currentQuestionIndex === 0}
-                    whileHover={currentQuestionIndex === 0 || reducedMotion ? undefined : { y: -1 }}
-                    whileTap={currentQuestionIndex === 0 || reducedMotion ? undefined : { scale: 0.98 }}
-                    className={`rounded-lg px-5 py-3 text-sm font-semibold ${
-                      currentQuestionIndex === 0
-                        ? "cursor-not-allowed bg-[#d1d5db] text-white"
-                        : "bg-white text-[var(--brand-ink)] ring-1 ring-[#9ca3af] hover:ring-[var(--brand-accent)]"
-                    }`}
-                  >
-                    Previous
-                  </motion.button>
-                  <motion.button
-                    type="button"
-                    onClick={() => setCurrentQuestionIndex((index) => Math.min(QUESTIONS.length - 1, index + 1))}
-                    disabled={currentQuestionIndex === QUESTIONS.length - 1}
-                    whileHover={currentQuestionIndex === QUESTIONS.length - 1 || reducedMotion ? undefined : { y: -1 }}
-                    whileTap={currentQuestionIndex === QUESTIONS.length - 1 || reducedMotion ? undefined : { scale: 0.98 }}
-                    className={`rounded-lg px-5 py-3 text-sm font-semibold ${
-                      currentQuestionIndex === QUESTIONS.length - 1
-                        ? "cursor-not-allowed bg-[#d1d5db] text-white"
-                        : "bg-[var(--brand-accent)] text-white hover:bg-[var(--brand-accent-strong)]"
-                    }`}
-                  >
-                    Next
-                  </motion.button>
-                </div>
+                {(currentQuestionIndex > 0 || currentQuestionIndex < furthestQuestionIndex) ? (
+                  <div className="mt-6 flex items-center justify-between gap-4">
+                    <div>
+                      {currentQuestionIndex > 0 ? (
+                        <motion.button
+                          type="button"
+                          onClick={() => setCurrentQuestionIndex((index) => Math.max(0, index - 1))}
+                          whileHover={reducedMotion ? undefined : { y: -1 }}
+                          whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+                          className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-[var(--brand-ink)] ring-1 ring-[#9ca3af] transition hover:ring-[var(--brand-accent)]"
+                          aria-label="Previous question"
+                        >
+                          <span aria-hidden="true" className="text-2xl leading-none">
+                            ←
+                          </span>
+                        </motion.button>
+                      ) : null}
+                    </div>
+                    <div>
+                      {currentQuestionIndex < furthestQuestionIndex ? (
+                        <motion.button
+                          type="button"
+                          onClick={() => setCurrentQuestionIndex((index) => Math.min(furthestQuestionIndex, index + 1))}
+                          whileHover={reducedMotion ? undefined : { y: -1 }}
+                          whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+                          className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--brand-accent)] text-white transition hover:bg-[var(--brand-accent-strong)]"
+                          aria-label="Next question"
+                        >
+                          <span aria-hidden="true" className="text-2xl leading-none">
+                            →
+                          </span>
+                        </motion.button>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
             </motion.section>
           )}
 

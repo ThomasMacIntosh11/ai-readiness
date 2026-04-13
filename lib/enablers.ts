@@ -55,6 +55,6 @@ export const ENABLERS: Enabler[] = [
     id: "culture",
     order: 7,
     shortName: "Culture and change management",
-    name: "Culture and leadership actively drive AI adoption across the organisation",
+    name: "Culture and leadership actively drive AI adoption across the organization",
   },
 ];
