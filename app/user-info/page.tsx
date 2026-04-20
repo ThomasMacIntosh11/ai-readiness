@@ -46,6 +46,18 @@ export default function UserInfoPage() {
     }
     setIsSubmitting(true);
     localStorage.setItem("profile", JSON.stringify(profile));
+
+    try {
+      const answers = JSON.parse(localStorage.getItem("answers") ?? "{}");
+      await fetch("/api/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...profile, answers }),
+      });
+    } catch {
+      // Non-blocking — proceed to results even if submission fails
+    }
+
     await new Promise((resolve) => setTimeout(resolve, reducedMotion ? 0 : 450));
     router.push("/results?download=1");
   };

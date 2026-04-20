@@ -86,27 +86,23 @@ function stageCenter(index: number, totalStages: number) {
 
 function scoreToJourneyT(score: number) {
   const boundedScore = clamp(score, 0, 100);
-  const totalStages = MATURITY_STAGES.length;
-  const stageIndex = MATURITY_STAGES.findIndex(
-    (stage) => boundedScore >= stage.start && boundedScore <= stage.end,
-  );
-
-  if (stageIndex < 0) {
-    return 0;
+  // Map score linearly to the SVG x-range (matching how stage separators are drawn)
+  const targetX = 48 + (624 * boundedScore) / 100;
+  // Binary-search for the bezier t that produces targetX
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 50; i++) {
+    const mid = (lo + hi) / 2;
+    if (bezierPoint(mid).x < targetX) lo = mid;
+    else hi = mid;
   }
-
-  const stage = MATURITY_STAGES[stageIndex];
-  const span = Math.max(1, stage.end - stage.start);
-  const progressInStage = clamp((boundedScore - stage.start) / span, 0, 1);
-
-  return (stageIndex + progressInStage) / totalStages;
+  return (lo + hi) / 2;
 }
 
 function benchmarkStatus(score: number) {
   if (score < 50) {
     return { label: "Growth opportunity", className: "bg-[#fde2e8] text-[#bf2950]" };
   }
-  if (score <= 80) {
+  if (score < 80) {
     return { label: "Developing", className: "bg-[#fff3cd] text-[#946200]" };
   }
 
@@ -320,6 +316,7 @@ export default function ResultsPage() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [pdfError, setPdfError] = useState(false);
   const answersRaw = useSyncExternalStore(
     subscribeToStorage,
     () => (typeof window === "undefined" ? "{}" : getStoredAnswers()),
@@ -348,50 +345,25 @@ export default function ResultsPage() {
   }, [profileRaw]);
 
   const onDownloadPdf = async () => {
-    if (typeof window === "undefined" || isExportingPdf) {
-      return;
-    }
-
-    const report = document.getElementById("pdf-report");
-    if (!report) {
-      return;
-    }
-
+    if (typeof window === "undefined" || isExportingPdf) return;
     setIsExportingPdf(true);
+    setPdfError(false);
     try {
-      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
-
-      const canvas = await html2canvas(report, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-        ignoreElements: (element) => element.classList?.contains("no-print") ?? false,
+      const { generatePdf } = await import("@/lib/generate-pdf");
+      await generatePdf({
+        participantName: profile.fullName?.trim() || "Participant",
+        organization: profile.organization || "",
+        role: profile.role || "",
+        overallScore,
+        maturity,
+        categoryScores,
+        stageDescription,
+        stageHeadline: MATURITY_STAGE_HEADLINES[maturity.label as keyof typeof MATURITY_STAGE_HEADLINES],
+        recommendations: maturityRec,
+        domainAverages: DOMAIN_AVERAGE_BY_ENABLER,
       });
-
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      pdf.save("AI-Readiness-Assessment-Report.pdf");
+    } catch {
+      setPdfError(true);
     } finally {
       setIsExportingPdf(false);
     }
@@ -468,7 +440,7 @@ export default function ResultsPage() {
                   {stageDescription}
                 </motion.p>
               </motion.div>
-              <div className="flex justify-start no-print">
+              <div className="flex flex-col items-start gap-2 no-print">
                 <motion.button
                   type="button"
                   onClick={onDownloadPdf}
@@ -479,6 +451,11 @@ export default function ResultsPage() {
                 >
                   {isExportingPdf ? "Generating report..." : "Download report"}
                 </motion.button>
+                {pdfError && (
+                  <p className="text-sm text-red-600">
+                    Something went wrong generating your report. Please try again.
+                  </p>
+                )}
               </div>
             </div>
 
@@ -499,9 +476,6 @@ export default function ResultsPage() {
               >
                 <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand-muted)]">Cumulative Score</div>
                 <div className="mt-3 text-5xl font-semibold tracking-tight text-[var(--brand-ink)]">{overallScore}%</div>
-                <div className="mt-3 text-sm leading-6 text-[var(--brand-muted)]">
-                  Your current readiness signal across the full assessment.
-                </div>
               </motion.div>
               <motion.div
                 className="rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(29,154,204,0.06))] p-6 shadow-[0_16px_40px_rgba(17,24,39,0.05)]"
@@ -512,9 +486,6 @@ export default function ResultsPage() {
                 <div className="mt-3 text-3xl font-semibold tracking-tight text-[var(--brand-ink)]">{maturity.label}</div>
                 <div className="mt-2 inline-flex rounded-full bg-[var(--brand-accent)]/10 px-3 py-1 text-sm font-semibold text-[var(--brand-accent-strong)]">
                   Range: {maturity.range}
-                </div>
-                <div className="mt-3 text-sm leading-6 text-[var(--brand-muted)]">
-                  The stage that best reflects how prepared your organization is to turn AI into repeatable outcomes.
                 </div>
               </motion.div>
             </motion.div>
