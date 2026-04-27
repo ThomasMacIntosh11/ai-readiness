@@ -68,7 +68,7 @@ export default function UserInfoPage() {
     [profile.fullName, profile.organization, profile.email],
   );
   const completionPercent = Math.round((requiredFieldsComplete / 3) * 100);
-  const submitLabel = isSubmitting ? "Preparing your report..." : "Send me my report";
+  const submitLabel = isSubmitting ? "Preparing your report..." : "See my report";
   const fieldClassName = (isComplete: boolean) =>
     `w-full rounded-xl border bg-white px-4 py-4 text-[var(--brand-ink)] transition placeholder:text-[#9ca3af] ${
       isComplete ? "border-[var(--brand-accent)] shadow-[0_0_0_3px_rgba(37,99,235,0.10)]" : "border-[#c6ced9]"
