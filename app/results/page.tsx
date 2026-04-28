@@ -343,13 +343,15 @@ export default function ResultsPage() {
     }
   }, [profileRaw]);
 
-  const onDownloadPdf = () => {
+  const onDownloadPdf = async () => {
     if (typeof window === "undefined" || isExportingPdf) return;
     setIsExportingPdf(true);
-    setTimeout(() => {
-      window.print();
+    try {
+      const { generatePdf } = await import("@/lib/generate-pdf");
+      await generatePdf();
+    } finally {
       setIsExportingPdf(false);
-    }, 100);
+    }
   };
   const onRetake = () => {
     if (typeof window !== "undefined") {
