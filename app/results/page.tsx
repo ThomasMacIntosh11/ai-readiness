@@ -316,7 +316,6 @@ export default function ResultsPage() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const [isExportingPdf, setIsExportingPdf] = useState(false);
-  const [pdfError, setPdfError] = useState(false);
   const answersRaw = useSyncExternalStore(
     subscribeToStorage,
     () => (typeof window === "undefined" ? "{}" : getStoredAnswers()),
@@ -344,29 +343,13 @@ export default function ResultsPage() {
     }
   }, [profileRaw]);
 
-  const onDownloadPdf = async () => {
+  const onDownloadPdf = () => {
     if (typeof window === "undefined" || isExportingPdf) return;
     setIsExportingPdf(true);
-    setPdfError(false);
-    try {
-      const { generatePdf } = await import("@/lib/generate-pdf");
-      await generatePdf({
-        participantName: profile.fullName?.trim() || "Participant",
-        organization: profile.organization || "",
-        role: profile.role || "",
-        overallScore,
-        maturity,
-        categoryScores,
-        stageDescription,
-        stageHeadline: MATURITY_STAGE_HEADLINES[maturity.label as keyof typeof MATURITY_STAGE_HEADLINES],
-        recommendations: maturityRec,
-        domainAverages: DOMAIN_AVERAGE_BY_ENABLER,
-      });
-    } catch {
-      setPdfError(true);
-    } finally {
+    setTimeout(() => {
+      window.print();
       setIsExportingPdf(false);
-    }
+    }, 100);
   };
   const onRetake = () => {
     if (typeof window !== "undefined") {
@@ -418,9 +401,9 @@ export default function ResultsPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[var(--brand-bg)]">
-      <ThreadBackground variant={1} />
+      <div className="print-hide"><ThreadBackground variant={1} /></div>
       <div className="relative z-10">
-        <SiteHeader />
+        <div className="print-hide"><SiteHeader /></div>
         <motion.main className="mx-auto w-full max-w-[980px] px-6 py-10 print-report" initial="hidden" animate="visible" variants={staggerContainer}>
           <div id="pdf-report">
             <motion.section className="rounded-2xl bg-[var(--brand-surface)] p-8 shadow-[0_4px_16px_rgba(17,24,39,0.08)] print-card" variants={panelReveal}>
@@ -451,11 +434,6 @@ export default function ResultsPage() {
                 >
                   {isExportingPdf ? "Generating report..." : "Download report"}
                 </motion.button>
-                {pdfError && (
-                  <p className="text-sm text-red-600">
-                    Something went wrong generating your report. Please try again.
-                  </p>
-                )}
               </div>
             </div>
 
