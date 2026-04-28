@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Brand blue rounded square -->
+  <rect width="32" height="32" rx="7" fill="#1d9acc"/>
+  <!-- Three ascending bars representing AI maturity levels -->
+  <rect x="5"  y="21" width="6" height="6"  rx="1.5" fill="white"/>
+  <rect x="13" y="15" width="6" height="12" rx="1.5" fill="white"/>
+  <rect x="21" y="9"  width="6" height="18" rx="1.5" fill="white"/>
+  <!-- Small node dot suggesting AI/neural network -->
+  <circle cx="24" cy="7" r="2" fill="white" opacity="0.55"/>
+</svg>
