@@ -347,8 +347,19 @@ export default function ResultsPage() {
     if (typeof window === "undefined" || isExportingPdf) return;
     setIsExportingPdf(true);
     try {
-      const { generatePdf } = await import("@/lib/generate-pdf");
-      await generatePdf();
+      const { generatePdf } = await import("@/lib/pdf-report");
+      await generatePdf({
+        participantName:  profile.fullName?.trim() || "Participant",
+        organization:     profile.organization || "",
+        role:             profile.role || "",
+        overallScore,
+        maturity,
+        categoryScores,
+        stageDescription,
+        stageHeadline:    MATURITY_STAGE_HEADLINES[maturity.label as keyof typeof MATURITY_STAGE_HEADLINES],
+        recommendations:  maturityRec,
+        domainAverages:   DOMAIN_AVERAGE_BY_ENABLER,
+      });
     } finally {
       setIsExportingPdf(false);
     }
