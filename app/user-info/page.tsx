@@ -143,7 +143,7 @@ export default function UserInfoPage() {
                 <input
                   type="email"
                   value={profile.email}
-                  onChange={(event) => setProfile((prev) => ({ ...prev, email: event.target.value, role: "" }))}
+                  onChange={(event) => setProfile((prev) => ({ ...prev, email: event.target.value }))}
                   className={fieldClassName(profile.email.trim().length > 0)}
                   placeholder="name@company.com"
                   required
