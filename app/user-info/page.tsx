@@ -1,12 +1,21 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useCallback, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Script from "next/script";
 import { motion, useReducedMotion } from "framer-motion";
 
 import SiteHeader from "@/app/components-site-header";
 import ThreadBackground from "@/app/components-thread-background";
 import { cardStagger, fadeInUp, heroStaggerContainer, heroStaggerItem, panelReveal, transitionForReducedMotion } from "@/lib/motion";
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (el: HTMLElement, options: Record<string, unknown>) => void;
+    };
+  }
+}
 
 type Profile = {
   fullName: string;
@@ -38,12 +47,22 @@ export default function UserInfoPage() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<HTMLDivElement>(null);
+
+  const onTurnstileLoad = useCallback(() => {
+    if (!turnstileRef.current || !window.turnstile) return;
+    window.turnstile.render(turnstileRef.current, {
+      sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+      callback: (token: string) => setTurnstileToken(token),
+      "expired-callback": () => setTurnstileToken(null),
+    });
+  }, []);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isSubmitting) {
-      return;
-    }
+    if (isSubmitting) return;
+
     setIsSubmitting(true);
     localStorage.setItem("profile", JSON.stringify(profile));
 
@@ -52,7 +71,7 @@ export default function UserInfoPage() {
       await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...profile, answers }),
+        body: JSON.stringify({ ...profile, answers, turnstileToken }),
       });
     } catch {
       // Non-blocking — proceed to results even if submission fails
@@ -62,7 +81,8 @@ export default function UserInfoPage() {
     router.push("/results?download=1");
   };
 
-  const isValid = profile.fullName.trim() && profile.organization.trim() && profile.email.trim();
+  const turnstileRequired = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const isValid = profile.fullName.trim() && profile.organization.trim() && profile.email.trim() && (!turnstileRequired || turnstileToken);
   const requiredFieldsComplete = useMemo(
     () => [profile.fullName, profile.organization, profile.email].filter((value) => value.trim().length > 0).length,
     [profile.fullName, profile.organization, profile.email],
@@ -76,6 +96,10 @@ export default function UserInfoPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[var(--brand-bg)]">
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        onLoad={onTurnstileLoad}
+      />
       <ThreadBackground variant={1} />
       <div className="relative z-10">
         <SiteHeader />
@@ -149,6 +173,12 @@ export default function UserInfoPage() {
                   required
                 />
               </label>
+
+              {turnstileRequired && (
+                <div className="flex justify-center pt-1">
+                  <div ref={turnstileRef} />
+                </div>
+              )}
 
               <div className="flex justify-center pt-1">
                 <motion.button

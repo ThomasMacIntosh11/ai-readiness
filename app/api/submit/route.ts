@@ -35,8 +35,10 @@ export async function POST(req: NextRequest) {
       turnstileToken: string;
     };
 
-    if (!turnstileToken || !(await verifyTurnstile(turnstileToken, ip))) {
-      return NextResponse.json({ error: "CAPTCHA verification failed." }, { status: 400 });
+    if (process.env.TURNSTILE_SECRET_KEY) {
+      if (!turnstileToken || !(await verifyTurnstile(turnstileToken, ip))) {
+        return NextResponse.json({ error: "CAPTCHA verification failed." }, { status: 400 });
+      }
     }
 
     if (!fullName?.trim() || !organization?.trim() || !email?.trim() || !answers) {
