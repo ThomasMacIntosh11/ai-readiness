@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { calculateCategoryScores, calculateOverallScore, maturityFromScore } from "@/lib/scoring";
 import type { Answers } from "@/lib/answers";
 
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const categoryScores = calculateCategoryScores(answers);
     const maturity = maturityFromScore(overallScore);
 
-    const { error: dbError } = await supabase.from("submissions").insert({
+    const { error: dbError } = await getSupabase().from("submissions").insert({
       full_name: fullName,
       organization,
       role: role ?? null,
