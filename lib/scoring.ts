@@ -1,6 +1,6 @@
 import { ENABLERS } from "./enablers";
 import { QUESTIONS } from "./questions";
-import { isScoredAnswer, type Answers } from "./answers";
+import { isAnswered, scoreForAnswer, type Answers } from "./answers";
 
 export type ScoreRow = {
   enablerId: string;
@@ -27,7 +27,8 @@ export function calculateCategoryScores(answers: Answers): ScoreRow[] {
     const enablerQuestions = QUESTIONS.filter((q) => q.enablerId === enabler.id);
     const values = enablerQuestions
       .map((q) => answers[q.id])
-      .filter(isScoredAnswer);
+      .filter(isAnswered)
+      .map(scoreForAnswer);
 
     if (values.length === 0) {
       return { enablerId: enabler.id, enablerName: enabler.name, score: 0, scoredResponses: 0 };
@@ -44,7 +45,7 @@ export function calculateCategoryScores(answers: Answers): ScoreRow[] {
 }
 
 export function calculateOverallScore(answers: Answers) {
-  const values = QUESTIONS.map((q) => answers[q.id]).filter(isScoredAnswer);
+  const values = QUESTIONS.map((q) => answers[q.id]).filter(isAnswered).map(scoreForAnswer);
   const totalPoints = values.reduce((sum, value) => sum + value, 0);
 
   return scoreFromAnswered(totalPoints, values.length);

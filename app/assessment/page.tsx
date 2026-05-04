@@ -52,7 +52,7 @@ export default function AssessmentIntroPage() {
               </motion.p>
               <motion.p className="mx-auto mt-3 max-w-3xl text-left text-lg leading-8 text-[var(--brand-muted)]" variants={heroStaggerItem}>
                 Choose the option that best reflects your organization today. If you don&apos;t know the answer or don&apos;t
-                have the information, choose not sure. It won&apos;t count against your score.
+                have the information, choose not sure. It will be scored as a 2.
               </motion.p>
             </motion.div>
             <motion.div className="mt-8 flex justify-center" variants={heroStaggerItem}>

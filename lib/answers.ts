@@ -9,3 +9,7 @@ export function isAnswered(value: unknown): value is AnswerValue {
 export function isScoredAnswer(value: unknown): value is NumericAnswer {
   return typeof value === "number" && value >= 1 && value <= 5;
 }
+
+export function scoreForAnswer(value: AnswerValue): NumericAnswer {
+  return value === "N/A" ? 2 : value;
+}

@@ -9,7 +9,8 @@ import SiteHeader from "@/app/components-site-header";
 import ThreadBackground from "@/app/components-thread-background";
 import { isAnswered, type Answers } from "@/lib/answers";
 import { cardStagger, fadeInUp, heroStaggerContainer, heroStaggerItem, panelReveal, staggerContainer, transitionForReducedMotion } from "@/lib/motion";
-import { MATURITY_RECS } from "@/lib/recommendations";
+import { getReportRecommendations } from "@/lib/recommendations";
+import type { EnablerId } from "@/lib/enablers";
 import {
   calculateCategoryScores,
   calculateOverallScore,
@@ -357,7 +358,7 @@ export default function ResultsPage() {
         categoryScores,
         stageDescription,
         stageHeadline:    MATURITY_STAGE_HEADLINES[maturity.label as keyof typeof MATURITY_STAGE_HEADLINES],
-        recommendations:  maturityRec,
+        recommendations,
         domainAverages:   DOMAIN_AVERAGE_BY_ENABLER,
       });
     } finally {
@@ -383,7 +384,17 @@ export default function ResultsPage() {
   const maturity = maturityFromScore(overallScore);
   const participantFirstName = profile.fullName?.trim().split(/\s+/)[0] || "Participant";
   const stageDescription = MATURITY_STAGE_DESCRIPTIONS[maturity.label as keyof typeof MATURITY_STAGE_DESCRIPTIONS];
-  const maturityRec = MATURITY_RECS[maturity.label];
+
+  const enablerScoresRecord = useMemo(() => {
+    const record: Record<string, number> = {};
+    categoryScores.forEach((row) => { record[row.enablerId] = row.score; });
+    return record as Record<EnablerId, number>;
+  }, [categoryScores]);
+
+  const recommendations = useMemo(
+    () => getReportRecommendations(maturity.label, enablerScoresRecord),
+    [maturity.label, enablerScoresRecord]
+  );
 
   const hasCompletedAssessment = useMemo(
     () => Object.values(answers).some((value) => isAnswered(value)),
@@ -485,15 +496,14 @@ export default function ResultsPage() {
             <div className="mt-7 space-y-7">
               <motion.section className="rounded-2xl bg-[var(--brand-surface)] p-8 shadow-[0_4px_16px_rgba(17,24,39,0.08)] print-card print-page-break" variants={panelReveal}>
               <h2 className="text-2xl font-semibold text-[var(--brand-ink)]">What to focus on in the next 90 days</h2>
-              <p className="mt-1 text-sm font-medium text-[var(--brand-muted)]">{maturityRec.subtitle}</p>
 
               <div className="mt-5 space-y-4">
-                {maturityRec.items.map((item, index) => (
-                  <div key={`${item.title}-${index}`} className="rounded-xl bg-[var(--brand-bg)] p-5">
+                {recommendations.map((rec, index) => (
+                  <div key={`${rec.title}-${index}`} className="rounded-xl bg-[var(--brand-bg)] p-5">
                     <p className="text-xl font-semibold text-[#1f2937]">
-                      {index + 1}. {item.title}
+                      {index + 1}. {rec.title}
                     </p>
-                    <p className="mt-2 text-base text-[#374151]">{item.subtitle}</p>
+                    <p className="mt-2 text-base text-[#374151]">{rec.description}</p>
                   </div>
                 ))}
               </div>

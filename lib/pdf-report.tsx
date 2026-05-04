@@ -4,6 +4,7 @@ import {
   Svg, Rect,
 } from "@react-pdf/renderer";
 import type { ScoreRow, Maturity } from "./scoring";
+import type { Recommendation } from "./recommendations";
 
 // ── Brand palette ─────────────────────────────────────────────────────────────
 
@@ -31,8 +32,6 @@ const ENABLER_SHORT: Record<string, string> = {
   culture:         "Culture and change management",
 };
 
-type FocusItem = { title: string; subtitle: string };
-
 export type ReportData = {
   participantName: string;
   organization:    string;
@@ -42,7 +41,7 @@ export type ReportData = {
   categoryScores:  ScoreRow[];
   stageDescription: string;
   stageHeadline:   string;
-  recommendations: { subtitle: string; items: FocusItem[] };
+  recommendations: Recommendation[];
   domainAverages:  Record<string, number>;
   logoData?:       string | null;
 };
@@ -166,12 +165,9 @@ function ReportDocument({ data }: { data: ReportData }) {
           <Text style={{ fontSize: 8.5, color: C.ink, fontFamily: "Helvetica-Bold", letterSpacing: 1.4, marginTop: 14 }}>
             WHAT TO FOCUS ON IN THE NEXT 90 DAYS
           </Text>
-          <Text style={{ fontSize: 9, color: C.muted, marginTop: 3 }}>
-            {data.recommendations.subtitle}
-          </Text>
 
           <View style={{ marginTop: 10 }}>
-            {data.recommendations.items.map((item, i) => (
+            {data.recommendations.map((rec, i) => (
               <View key={i} style={{ flexDirection: "row", marginBottom: 8, alignItems: "flex-start" }}>
                 <View style={{
                   width: 22, height: 22, borderRadius: 11,
@@ -186,10 +182,10 @@ function ReportDocument({ data }: { data: ReportData }) {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={{ fontSize: 10.5, color: C.ink, fontFamily: "Helvetica-Bold" }}>
-                    {item.title}
+                    {rec.title}
                   </Text>
                   <Text style={{ fontSize: 9.5, color: C.muted, marginTop: 2, lineHeight: 1.45 }}>
-                    {item.subtitle}
+                    {rec.description}
                   </Text>
                 </View>
               </View>
