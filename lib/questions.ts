@@ -20,7 +20,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "strategy_3",
     enablerId: "strategy",
-    text: "3. We are using AI to create new value (i.e., new products or services).",
+    text: "3. We are using AI to create new value such as new products or services, not just improve efficiency.",
   },
   {
     id: "strategy_4",
@@ -30,7 +30,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "strategy_5",
     enablerId: "strategy",
-    text: "5. We have a clear approach for when to use standard tools and when to build custom solutions.",
+    text: "5. We have a clear approach for when to use standard tools and when to build custom AI solutions.",
   },
   {
     id: "data_1",
@@ -40,7 +40,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "data_2",
     enablerId: "data",
-    text: "7. We understand which of our data is reliable and usable.",
+    text: "7. We understand which of our data is reliable and usable for AI deployment.",
   },
   {
     id: "data_3",
@@ -60,12 +60,12 @@ export const QUESTIONS: Question[] = [
   {
     id: "technology_1",
     enablerId: "technology",
-    text: "11. Our systems can support advanced AI workflows and automation.",
+    text: "11. Our systems can support AI that performs multi-step workflows and actions, not just basic chat or search.",
   },
   {
     id: "technology_2",
     enablerId: "technology",
-    text: "12. We can adopt new AI tools or models without major disruption.",
+    text: "12. We can adopt new AI tools or models without major disruption to the technical architecture.",
   },
   {
     id: "technology_3",
@@ -75,7 +75,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "technology_4",
     enablerId: "technology",
-    text: "14. There are consistent ways to build and deploy AI solutions.",
+    text: "14. There are consistent and standard ways to build and deploy AI solutions.",
   },
   {
     id: "technology_5",
@@ -90,12 +90,12 @@ export const QUESTIONS: Question[] = [
   {
     id: "talent_2",
     enablerId: "talent",
-    text: "17. A meaningful portion of our workforce uses AI regularly.",
+    text: "17. A meaningful portion of our workforce uses AI regularly for real work (e.g. beyond summarization).",
   },
   {
     id: "talent_3",
     enablerId: "talent",
-    text: "18. We have people who connect business needs with AI capability.",
+    text: "18. We have people in official roles who connect business needs with AI capability.",
   },
   {
     id: "talent_4",
@@ -105,7 +105,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "talent_5",
     enablerId: "talent",
-    text: "20. Leaders understand enough about AI to make informed decisions.",
+    text: "20. Non-technical leaders understand enough about AI to make informed decisions.",
   },
   {
     id: "operating_model_1",
@@ -115,7 +115,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "operating_model_2",
     enablerId: "operating_model",
-    text: "22. Teams can run AI experiments without heavy central approval.",
+    text: "22. Teams can run AI experiments without significant central approval or delays.",
   },
   {
     id: "operating_model_3",
@@ -125,12 +125,12 @@ export const QUESTIONS: Question[] = [
   {
     id: "operating_model_4",
     enablerId: "operating_model",
-    text: "24. Roles and responsibilities reflect working with AI.",
+    text: "24. Roles and job expectations have been formally updated to reflect working alongside AI.",
   },
   {
     id: "operating_model_5",
     enablerId: "operating_model",
-    text: "25. Feedback on AI outputs leads to real improvements.",
+    text: "25. There is a clear way for users to give feedback on AI outputs, and it leads to visible improvements.",
   },
   {
     id: "governance_1",
@@ -140,7 +140,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "governance_2",
     enablerId: "governance",
-    text: "27. We regularly review AI outputs for accuracy and bias.",
+    text: "27. We have a regular process for reviewing AI outputs for accuracy and bias.",
   },
   {
     id: "governance_3",
@@ -155,12 +155,12 @@ export const QUESTIONS: Question[] = [
   {
     id: "governance_5",
     enablerId: "governance",
-    text: "30. We track and improve the quality of AI outputs over time.",
+    text: "30. We track how often AI outputs need to be corrected and actively improve their quality.",
   },
   {
     id: "culture_1",
     enablerId: "culture",
-    text: "31. Employees feel comfortable experimenting with AI.",
+    text: "31. Employees feel comfortable using AI without concern that it will replace their role or reflect negatively on them.",
   },
   {
     id: "culture_2",
