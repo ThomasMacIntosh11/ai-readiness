@@ -32,7 +32,7 @@ export default function ContactPage() {
           <section className="rounded-2xl bg-[var(--brand-surface)] p-8 shadow-[0_4px_16px_rgba(17,24,39,0.08)]">
             <h1 className="text-4xl font-semibold tracking-tight text-[var(--brand-ink)]">Contact Adaptovate</h1>
             <p className="mt-3 text-lg text-[var(--brand-muted)]">
-              Send A Message And We Will Follow Up On Your Assessment Results.
+              Send a message and we will follow up on your assessment results.
             </p>
 
             <form onSubmit={onSubmit} className="mt-8 space-y-5">
