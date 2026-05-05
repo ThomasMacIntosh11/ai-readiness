@@ -100,7 +100,7 @@ function ReportDocument({ data }: { data: ReportData }) {
         </View>
 
         {/* ── Content body ─────────────────────────────────────────────────── */}
-        <View style={{ paddingHorizontal: 36, paddingTop: 22 }}>
+        <View style={{ paddingHorizontal: 36, paddingTop: 22, paddingBottom: 72 }}>
 
           {/* Participant + meta row */}
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
