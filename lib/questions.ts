@@ -20,7 +20,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "strategy_3",
     enablerId: "strategy",
-    text: "3. We are using AI to create new value such as new products or services, not just improve efficiency.",
+    text: "3. We are using AI to create new value (such as products or services), not just improve efficiency.",
   },
   {
     id: "strategy_4",
@@ -40,7 +40,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "data_2",
     enablerId: "data",
-    text: "7. We understand which of our data is reliable and usable for AI deployment.",
+    text: "7. We understand which of our data is reliable and suitable for AI deployment.",
   },
   {
     id: "data_3",
@@ -100,7 +100,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "talent_4",
     enablerId: "talent",
-    text: "19. There is an active resource where teams share how they use AI.",
+    text: "19. There is an active space where teams share how they use AI.",
   },
   {
     id: "talent_5",
@@ -110,7 +110,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "operating_model_1",
     enablerId: "operating_model",
-    text: "21. When we introduce AI, we rethink how the work should be done.",
+    text: "21. When we introduce AI into a new workflow, we rethink how the work should be done.",
   },
   {
     id: "operating_model_2",
@@ -155,7 +155,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "governance_5",
     enablerId: "governance",
-    text: "30. We track how often AI outputs need to be corrected and actively improve their quality.",
+    text: "30. We track how often AI outputs need to be corrected and actively improve quality.",
   },
   {
     id: "culture_1",

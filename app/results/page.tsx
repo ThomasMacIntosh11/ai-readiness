@@ -87,8 +87,12 @@ function stageCenter(index: number, totalStages: number) {
 
 function scoreToJourneyT(score: number) {
   const boundedScore = clamp(score, 0, 100);
-  // Map score linearly to the SVG x-range (matching how stage separators are drawn)
-  const targetX = 48 + (624 * boundedScore) / 100;
+  const stageIndex = MATURITY_STAGES.findIndex((s) => boundedScore >= s.start && boundedScore <= s.end);
+  const idx = stageIndex < 0 ? 0 : stageIndex;
+  const stage = MATURITY_STAGES[idx];
+  const withinStage = (boundedScore - stage.start) / (stage.end - stage.start);
+  const stageWidth = 624 / MATURITY_STAGES.length;
+  const targetX = 48 + (idx + withinStage) * stageWidth;
   // Binary-search for the bezier t that produces targetX
   let lo = 0, hi = 1;
   for (let i = 0; i < 50; i++) {
@@ -532,7 +536,7 @@ export default function ResultsPage() {
                         <p className="max-w-[70%] text-lg font-semibold text-[#1f2937]">{row.enablerName}</p>
                         <div className="flex items-center gap-2">
                           <span className="text-2xl font-semibold text-[var(--brand-ink)]">{row.score}%</span>
-                          <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] ${status.className}`}>
+                          <span className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] ${status.className}`}>
                             {status.label}
                           </span>
                         </div>
