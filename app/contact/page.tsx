@@ -18,7 +18,7 @@ export default function ContactPage() {
       `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     );
 
-    window.location.href = `mailto:contact@adaptovate.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:growth_CA@adaptovate.com?subject=${subject}&body=${body}`;
   };
 
   const canSend = name.trim() && email.trim() && message.trim();
