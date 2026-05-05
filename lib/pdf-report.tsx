@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Document, Page, View, Text, Image,
+  Document, Page, View, Text, Image, Link,
   Svg, Rect,
 } from "@react-pdf/renderer";
 import type { ScoreRow, Maturity } from "./scoring";
@@ -120,7 +120,7 @@ function ReportDocument({ data }: { data: ReportData }) {
 
           {/* Headline */}
           <Text style={{ fontSize: 22, fontFamily: "Helvetica-Bold", marginTop: 20, lineHeight: 1.2 }}>
-            Your organization is an AI{" "}
+            {data.organization?.trim() ? data.organization.trim() : "Your organization"} is an AI{" "}
             <Text style={{ color: C.accent }}>{data.maturity.label}</Text>.
           </Text>
 
@@ -240,9 +240,9 @@ function ReportDocument({ data }: { data: ReportData }) {
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", paddingBottom: 18 }}>
             <View>
               <Text style={{ fontSize: 9, color: C.muted }}>Want a 30-min readout?</Text>
-              <Text style={{ fontSize: 9.5, color: C.headerBg, fontFamily: "Helvetica-Bold", marginTop: 2 }}>
-                adaptovate.com/contact
-              </Text>
+              <Link src="mailto:growth_CA@adaptovate.com?subject=Free%20AI%20Readiness%20Consultation" style={{ fontSize: 9.5, color: C.headerBg, fontFamily: "Helvetica-Bold", marginTop: 2 }}>
+                growth_CA@adaptovate.com
+              </Link>
             </View>
             <View style={{ alignItems: "flex-end" }}>
               <Text style={{ fontSize: 8, color: C.muted, fontFamily: "Helvetica-Bold", letterSpacing: 1.2 }}>

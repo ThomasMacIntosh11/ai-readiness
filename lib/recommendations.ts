@@ -7,29 +7,29 @@ export type Recommendation = { title: string; description: string };
 
 export const STAGE_RECS: Record<MaturityStage, Recommendation> = {
   Explorer: {
-    title: "Get interested people in a room to try one test case and capture what they learn.",
+    title: "Get interested people together to experiment on a core problem.",
     description:
-      "Bring together a small group of curious volunteers to pick one practical problem, try AI on it, and document the lessons so each attempt makes the organization smarter for the next one.",
+      "Gather a small group of curious volunteers to pick one practical problem and experiment with AI-powered solutions. Document lessons learned so the organization grows smarter over time.",
   },
   Pilot: {
     title: "Pick 3 to 5 use cases and build them with a small side-of-desk team.",
     description:
-      "Standing up a lean cross-functional team to ship rough versions of a handful of use cases gives you the hands-on experience and pattern recognition you need before investing at scale.",
+      "Standing up a lean cross-functional team to ship rough versions of a handful of use cases gives you the hands-on experience and proof-of-value you need before investing at scale.",
   },
   Builder: {
-    title: "Take one proven pilot enterprise-wide and document what worked and what didn't.",
+    title: "Take one proven pilot enterprise-wide.",
     description:
       "Turning your most successful pilot into a true enterprise rollout builds the muscle for repeatable scale-ups and ensures the next one is faster, cleaner, and lower risk.",
   },
   Integrator: {
-    title: "Formalize AI governance across leadership and hunt for cross-enterprise value plays.",
+    title: "Formalize cross-functional AI governance and hunt for cross-enterprise value plays.",
     description:
       "A formal executive governance forum with real decision rights lets you move beyond isolated wins and capture value that no single function could deliver alone.",
   },
   Transformer: {
     title: "Redesign your operating model for a hybrid human and agentic workforce.",
     description:
-      "Rebuilding org structure, performance management, incentives, and decision rights for a world where humans oversee agents is what unlocks the next leap in productivity and growth.",
+      "Rebuilding organizational structure, performance management, incentives, and decision rights for a world where humans oversee agents is what unlocks the next leap in productivity and growth.",
   },
 };
 
@@ -53,7 +53,7 @@ export const ENABLER_RECS: Record<EnablerId, { under50: Recommendation; overOrEq
         "Concentrating data effort where AI is actually being used unblocks priority initiatives much faster than trying to fix everything at once.",
     },
     overOrEqual50: {
-      title: "Build reusable data products with documented lineage and APIs that AI can consume directly.",
+      title: "Build reusable data products that AI can consume directly.",
       description:
         "This stops every new use case from reinventing the data plumbing and lets AI act on live information rather than yesterday's snapshot.",
     },
@@ -67,12 +67,12 @@ export const ENABLER_RECS: Record<EnablerId, { under50: Recommendation; overOrEq
     overOrEqual50: {
       title: "Invest in orchestration, observability, and per-use-case cost visibility for agentic workloads.",
       description:
-        "This lets you safely connect AI to production systems and scale agentic use cases without rearchitecting for each new model or tool.",
+        "Set up the tools to manage AI workflows, monitor what is happening, and track costs so you can connect AI to real systems and add new use cases without rebuilding everything each time.",
     },
   },
   talent: {
     under50: {
-      title: "Roll out role-based AI training tied to the actual work people do, paired with tool access.",
+      title: "Roll out role-based AI training tied to the actual work people do.",
       description:
         "Role-specific training applied to real work is what turns curiosity into daily productive use across the workforce.",
     },

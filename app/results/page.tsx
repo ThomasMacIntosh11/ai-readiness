@@ -441,7 +441,12 @@ export default function ResultsPage() {
                   className="text-3xl font-semibold leading-tight tracking-[-0.04em] text-[var(--brand-ink)] md:text-5xl"
                   variants={heroStaggerItem}
                 >
-                  <span className="text-[var(--brand-accent-strong)]">{participantFirstName}</span>, your organization is{" "}
+                  <span className="text-[var(--brand-accent-strong)]">{participantFirstName}</span>,{" "}
+                  {profile.organization?.trim() ? (
+                    <><span className="text-[var(--brand-accent-strong)]">{profile.organization.trim()}</span> is</>
+                  ) : (
+                    <>your organization is</>
+                  )}{" "}
                   an <span className="text-[var(--brand-accent-strong)]">AI {maturity.label}</span>.
                 </motion.p>
                 <motion.p
