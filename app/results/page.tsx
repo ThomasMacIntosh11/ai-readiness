@@ -441,13 +441,13 @@ export default function ResultsPage() {
                   className="text-3xl font-semibold leading-tight tracking-[-0.04em] text-[var(--brand-ink)] md:text-5xl"
                   variants={heroStaggerItem}
                 >
-                  <span className="text-[var(--brand-accent-strong)]">{participantFirstName}</span>,{" "}
+                  {participantFirstName},{" "}
                   {profile.organization?.trim() ? (
-                    <><span className="text-[var(--brand-accent-strong)]">{profile.organization.trim()}</span> is</>
+                    <>{profile.organization.trim()} is</>
                   ) : (
                     <>your organization is</>
                   )}{" "}
-                  an <span className="text-[var(--brand-accent-strong)]">AI {maturity.label}</span>.
+                  an AI <span className="text-[var(--brand-accent-strong)]">{maturity.label}</span>.
                 </motion.p>
                 <motion.p
                   className="mt-4 max-w-3xl text-base leading-7 text-[var(--brand-muted)] md:text-lg"
