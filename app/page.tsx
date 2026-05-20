@@ -79,12 +79,12 @@ export default function Home() {
                       Start the assessment
                     </Link>
                   </motion.div>
-                  <Link
-                    href="/contact"
+                  <a
+                    href="https://www.adaptovate.com/contact"
                     className="inline-flex items-center rounded-xl border border-[#d1d5db] bg-white px-6 py-4 text-base font-semibold text-[var(--brand-ink)] transition hover:border-[var(--brand-accent)]/40 hover:text-[var(--brand-accent-strong)]"
                   >
                     Talk to an expert
-                  </Link>
+                  </a>
                 </motion.div>
 
               </div>

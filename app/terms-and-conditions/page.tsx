@@ -3,7 +3,13 @@ import Link from "next/link";
 import SiteHeader from "@/app/components-site-header";
 import ThreadBackground from "@/app/components-thread-background";
 
-const SECTIONS = [
+type Section = {
+  title: string;
+  body: string;
+  link?: { text: string; href: string };
+};
+
+const SECTIONS: Section[] = [
   {
     title: "1. Overview",
     body: "These Terms and Conditions govern your use of the AI Readiness Assessment tool (the \"Assessment\") provided by ADAPTOVATE Inc. (\"ADAPTOVATE\", \"we\", \"us\", or \"our\"). By accessing or completing the Assessment, you agree to be bound by these terms. If you do not agree, please do not proceed.",
@@ -23,6 +29,7 @@ const SECTIONS = [
   {
     title: "5. Privacy and Data Handling",
     body: "ADAPTOVATE is committed to handling your personal information in accordance with applicable privacy laws, including the Personal Information Protection and Electronic Documents Act (PIPEDA) and applicable provincial privacy legislation. Your data is stored securely and access is limited to authorised ADAPTOVATE personnel and service providers involved in delivering your results. You may request access to, correction of, or deletion of your personal information at any time by contacting us directly.",
+    link: { text: "Privacy Policy", href: "https://www.adaptovate.com/privacy-policy/" },
   },
   {
     title: "6. Communications",
@@ -74,7 +81,16 @@ export default function TermsAndConditionsPage() {
               {SECTIONS.map((section) => (
                 <div key={section.title}>
                   <h2 className="text-base font-semibold text-[var(--brand-ink)]">{section.title}</h2>
-                  <p className="mt-2 text-base leading-8 text-[var(--brand-muted)]">{section.body}</p>
+                  <p className="mt-2 text-base leading-8 text-[var(--brand-muted)]">
+                    {section.body}
+                    {section.link && (
+                      <> For full details, see our{" "}
+                        <a href={section.link.href} target="_blank" rel="noopener noreferrer" className="font-medium text-[var(--brand-accent-strong)] hover:underline">
+                          {section.link.text}
+                        </a>.
+                      </>
+                    )}
+                  </p>
                 </div>
               ))}
             </div>

@@ -576,15 +576,15 @@ export default function ResultsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={transitionForReducedMotion(!!reducedMotion, 0.35)}
             >
-              <Link
-                href="/contact"
+              <a
+                href="https://www.adaptovate.com/contact"
                 className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand-accent)] px-6 py-3 text-sm font-semibold text-white hover:bg-[var(--brand-accent-strong)]"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
                 </svg>
                 Get a free readout of your report
-              </Link>
+              </a>
             </motion.div>
           </div>
         </motion.main>
